@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+exclude = ["templates"]
+
+[tool.setuptools.package-data]
+tilemaker = ["server/static/*", "server/static/assets/*"]
+
+[project]
+name = "tileadder"
+version = "0.0.1"
+requires-python = ">=3.12"
+dependencies = [
+	"fastapi",
+	"tilemaker",
+	"soauth",
+	"ruff",
+	"ty"
+]
+
+[project.scripts]
+tileadder = "tileadder.scripts.cli:main"
+
+[tool.ruff.lint]
+extend-select = ["I"]
