@@ -10,9 +10,11 @@ from fastapi import Depends, FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from structlog import get_logger
 from structlog.types import FilteringBoundLogger
+
 from tileadder.settings import Settings
 
 settings = Settings()
+
 
 def setup_templating(
     template_directory: Path,
@@ -53,9 +55,7 @@ def logger():
 
 templates = setup_templating(
     template_directory=Path(__file__.replace("templating.py", "templates")),
-    available_strings={
-        "base_url": settings.app_base_url
-    }
+    available_strings={"base_url": settings.app_base_url},
 )
 
 LoggerDependency = Annotated[FilteringBoundLogger, Depends(logger)]

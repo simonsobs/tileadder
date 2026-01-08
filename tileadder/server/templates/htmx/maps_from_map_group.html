@@ -1,0 +1,20 @@
+{% for map in maps %}
+<div class="nes-container with-title" style="margin-top:0.5em">
+  <p class="title">{{ map.name }}</p>
+  <p><span class="nes-text is-primary">{{ map.map_id }}</span>: {{ map.description }}</p>
+  <p><span class="nes-text is-error">Requires</span> {{ map.grant }}</p>
+  <button class="nes-btn is-error"
+    hx-delete="{{base_url}}/current/maps/{{map.id}}"
+	hx-swap="delete"
+	hx-target="closest .nes-container"
+	hx-confirm="Are you sure you wish to delete map {{map.name}}?">
+	Delete
+  </button>
+  <button class="nes-btn is-success"
+    hx-get="{{base_url}}/current/bands/{{map.id}}"
+	hx-trigger="click"
+	hx-swap="outerHTML">
+	Bands
+  </button>
+</div>
+{% endfor %}

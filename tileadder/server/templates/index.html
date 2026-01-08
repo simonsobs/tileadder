@@ -4,7 +4,7 @@
 <section>
   <div class="nes-container">
     <p>This is the map viewer management service. You have the following permissions for maps:</p>
-    <ul>
+    <ul nes-list is-disc>
     {% for scope in scopes %}
       {% if scope.startswith("maps:") %}
         <li>{{scope}}</li>

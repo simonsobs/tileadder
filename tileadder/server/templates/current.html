@@ -1,4 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
-{{ map_group_names }}
+<section>
+	<div class="nes-container with-title">
+		<p class="title">Manage Currently Loaded Maps</p>
+		<p>This page allows you to manage currently loaded maps. Click on each map group to
+			 load the maps, layers, and bands that are loaded to view or remove them.
+		</p>
+	</div>
+</section>
+{% for map_group in map_groups %}
+<section>
+  <div class="nes-container"
+	  >
+		<h3>{{map_group.name}}</h3>
+		<p><span class="nes-text is-error">Requires</span> {{ map_group.grant }}</p>
+  	<button class="nes-btn is-error"
+		  hx-delete="{{base_url}}/current/groups/{{map_group.id}}"
+			hx-swap="delete"
+			hx-target="closest .nes-container"
+			hx-confirm="Are you sure you wish to delete map group {{map_group.name}}?">
+		  Delete
+		</button>
+		<button class="nes-btn is-success"
+		  hx-get="{{base_url}}/current/maps/{{map_group.id}}"
+		  hx-trigger="click"
+		  hx-swap="outerHTML">
+		  Maps
+		</button>
+	</div>
+</section>
+{% endfor %}
 {% endblock %}

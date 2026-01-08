@@ -10,9 +10,9 @@ from soauth.toolkit.fastapi import global_setup, mock_global_setup
 
 from tileadder.settings import Settings
 
+from .current import router as current_router
 from .database import EngineManager
 from .templating import template_endpoint
-from .current import router as current_router
 
 settings = Settings()
 
