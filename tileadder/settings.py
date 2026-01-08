@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     client_secret_filename: Path | None = None  # Suggest /data/client_secret
     public_key_filename: Path | None = None  # Suggest /data/public_key.pem
 
+    database_url: str = "sqlite:///database.db"
+
     model_config = SettingsConfigDict(env_prefix="TILEADDER_", env_file=".env")
 
     @model_validator(mode="after")

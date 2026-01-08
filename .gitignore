@@ -1,5 +1,8 @@
 .venv/*
 *__pycache__/*
+*.pyc
+*.DS_Store
 dist*
 *.egg-info
 .nova/*
+database.db

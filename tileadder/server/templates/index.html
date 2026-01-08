@@ -1,1 +1,29 @@
 {% extends "base.html" %}
+{% block content %}
+{% if user.is_authenticated %}
+<section>
+  <div class="nes-container">
+    <p>This is the map viewer management service. You have the following permissions for maps:</p>
+    <ul>
+    {% for scope in scopes %}
+      {% if scope.startswith("maps:") %}
+        <li>{{scope}}</li>
+      {% endif %}
+    {% endfor %}
+    </ul>
+  </div>
+</section>
+<section>
+  <div class="nes-container">
+    <p>Using this service is simple. It can be used to add or remove maps from visibility on the main
+       map viewer service that this instance is connected to. Use the buttons below to begin.</p>
+  </div>
+</section>
+{% else %}
+<section>
+  <div class="nes-container">
+    <p>Please authenticate first.</p>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

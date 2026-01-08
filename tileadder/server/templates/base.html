@@ -37,13 +37,13 @@
 	  <div style="display:flex;justify-content:flex-start">
 		{% if user.is_authenticated %}
 		<section class="buttonholder">
-		  <button type="button" class="nes-btn is-primary" onclick="location.href='{{current_url}}'">Current</button>
+		  <button type="button" class="nes-btn is-primary" onclick="location.href='{{base_url}}/current'">Current</button>
 		</section>
 		<section class="buttonholder">
-		  <button type="button" class="nes-btn is-success" onclick="location.href='{{add_url}}'">Add</button>
+		  <button type="button" class="nes-btn is-success" onclick="location.href='{{base_url}}/add'">Add</button>
 		</section>
 		<section class="buttonholder">
-		  <button type="button" class="nes-btn is-warning" onclick="location.href='{{flow_url}}'">Flows</button>
+		  <button type="button" class="nes-btn is-warning" onclick="location.href='{{base_url}}/flow'">Flows</button>
 		</section>
 		{% else %}
 		<section class="buttonholder">
