@@ -10,6 +10,7 @@ from soauth.toolkit.fastapi import global_setup, mock_global_setup
 
 from tileadder.settings import Settings
 
+from .add import router as add_router
 from .current import router as current_router
 from .database import EngineManager
 from .templating import template_endpoint
@@ -50,3 +51,4 @@ else:
 template_endpoint(app=app, path="/", template="index.html", log_name="app.home")
 
 app.include_router(router=current_router)
+app.include_router(router=add_router)
