@@ -4,13 +4,14 @@ API endpoints for adding new maps to the system.
 
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, Response
 from pydantic import BaseModel
 
 from tileadder.service.filesystem import (
     safe_evaluate,
     safe_read_directory_specific_file_types,
 )
+from tileadder.service.creation import create_map_group
 
 from .templating import LoggerDependency, TemplateDependency, templateify
 
@@ -72,3 +73,18 @@ def evaluate(
     except OSError:
         raise HTTPException(500, "Error with FITS file")
     return {"filename": x.path.name, "layers": layers}
+
+
+class GroupCreationRequest(BaseModel):
+    name: str
+    description: str
+    grant: str | None
+    
+@router.post("/groups")
+def new_group(x: GroupCreationRequest, request: Request):
+    with request.app.engine.session as s:
+        create_map_group(name=x.name, description=x.description, grant=x.grant, session=s)
+    
+    response = Response(content=None, status_code=201, headers={"HX-Refresh":"true"})
+    
+    return response
