@@ -35,17 +35,12 @@
             <section class="buttonholder">
               <button type="button"
                       class="nes-btn is-primary"
-                      onclick="location.href='{{ base_url }}/current'">Current</button>
+                      onclick="location.href='{{ base_url }}/current'">Manage</button>
             </section>
             <section class="buttonholder">
               <button type="button"
                       class="nes-btn is-success"
-                      onclick="location.href='{{ base_url }}/add'">Add</button>
-            </section>
-            <section class="buttonholder">
-              <button type="button"
-                      class="nes-btn is-warning"
-                      onclick="location.href='{{ base_url }}/flow'">Flows</button>
+                      onclick="location.href='{{ base_url }}/add'">Browse</button>
             </section>
           {% else %}
             <section class="buttonholder">
@@ -57,7 +52,7 @@
         </div>
       </div>
       <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
-    <script src="https://unpkg.com/htmx-ext-json-enc@2.0.1/json-enc.js"></script>
+      <script src="https://unpkg.com/htmx-ext-json-enc@2.0.1/json-enc.js"></script>
     </footer>
   </body>
 </html>

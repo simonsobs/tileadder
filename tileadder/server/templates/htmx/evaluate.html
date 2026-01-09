@@ -1,66 +1,89 @@
-{% for layer in layers %}
-  <div class="nes-container with-title" style="margin-bottom:0.5em">
-    <p class="title">{{ layer.layer_id }}</p>
-    <p>
-      <span class="nes-text is-primary">HDU</span> {{ layer.provider.hdu }},
-      <span class="nes-text is-primary">Index</span> {{ layer.provider.index }},
-      <span class="nes-text is-primary">Levels</span> {{ layer.number_of_levels }},
-      <span class="nes-text is-primary">Tile size</span> {{ layer.tile_size }}
-      <label style="float: right">
-        <input type="checkbox"
-               class="nes-checkbox"
-               checked
-               id="include_field_{{ layer.layer_id }}" />
-        <span>Included</span>
-      </label>
-      <div class="nes-field">
-        <label for="name_field_{{ layer.layer_id }}">Name</label>
-        <input type="text"
-               id="name_field_{{ layer.layer_id }}"
-               class="nes-input"
-               value="{{ layer.name }}">
+<div class="nes-container with-title">
+  <p class="title">{{ filename }}</p>
+  <h3>Band Information</h3>
+  <div class="nes-field">
+    <label for="band_name_{{ band_id }}">Band Name</label>
+    <input type="text"
+           id="band_name_{{ band_id }}"
+           class="nes-input"
+           value="New Band">
+  </div>
+  <div class="nes-field">
+    <label for="band_description_{{ band_id }}">Band Name</label>
+    <input type="text"
+           id="band_description_{{ band_id }}"
+           class="nes-input"
+           value="Description for new band">
+  </div>
+  <div class="nes-field">
+    <label for="band_grant_{{ band_id }}">Required Grant</label>
+    <input type="text" id="band_grant{{ band_id }}" class="nes-input">
+  </div>
+  <h3 style="margin-top:1em">Layers</h3>
+  {% for layer in layers %}
+    <div class="nes-container with-title" style="margin-top:0.5em">
+      <p class="title">{{ layer.layer_id }}</p>
+      <p>
+        <span class="nes-text is-primary">HDU</span> {{ layer.provider.hdu }},
+        <span class="nes-text is-primary">Index</span> {{ layer.provider.index }},
+        <span class="nes-text is-primary">Levels</span> {{ layer.number_of_levels }},
+        <span class="nes-text is-primary">Tile size</span> {{ layer.tile_size }}
+        <label style="float: right">
+          <input type="checkbox"
+                 class="nes-checkbox"
+                 checked
+                 id="include_field_{{ layer.layer_id }}" />
+          <span>Included</span>
+        </label>
+        <div class="nes-field">
+          <label for="name_field_{{ layer.layer_id }}">Name</label>
+          <input type="text"
+                 id="name_field_{{ layer.layer_id }}"
+                 class="nes-input"
+                 value="{{ layer.name }}">
+        </div>
+        <div class="nes-field">
+          <label for="desc_field_{{ layer.layer_id }}">Description</label>
+          <input type="text"
+                 id="desc_field_{{ layer.layer_id }}"
+                 class="nes-input"
+                 value="{{ layer.description }}">
+        </div>
+        <div class="nes-field">
+          <label for="quantity_field_{{ layer.layer_id }}">Quantity ((</label>
+          <input type="text"
+                 id="quantity_field_{{ layer.layer_id }}"
+                 class="nes-input"
+                 value="{{ layer.quantity }}">
+        </div>
+        <div class="nes-field">
+          <label for="units_field_{{ layer.layer_id }}">Units</label>
+          <input type="text"
+                 id="units_field_{{ layer.layer_id }}"
+                 class="nes-input"
+                 value="{{ layer.units }}">
+        </div>
+        <div class="nes-field">
+          <label for="vmin_field_{{ layer.layer_id }}">vmin ("auto" to dynamically calculate)</label>
+          <input type="text"
+                 id="vmin_field_{{ layer.layer_id }}"
+                 class="nes-input"
+                 value="{{ layer.vmin }}">
+        </div>
+        <div class="nes-field">
+          <label for="vmax_field_{{ layer.layer_id }}">vmax ("auto" to dynamically calculate)</label>
+          <input type="text"
+                 id="vmax_field_{{ layer.layer_id }}"
+                 class="nes-input"
+                 value="{{ layer.vmax }}">
+        </div>
+        <div class="nes-field">
+          <label for="cmap_field_{{ layer.layer_id }}">Color map (any from matplotlib)</label>
+          <input type="text"
+                 id="cmap_field_{{ layer.layer_id }}"
+                 class="nes-input"
+                 value="{{ layer.cmap }}">
+        </div>
       </div>
-      <div class="nes-field">
-        <label for="desc_field_{{ layer.layer_id }}">Description</label>
-        <input type="text"
-               id="desc_field_{{ layer.layer_id }}"
-               class="nes-input"
-               value="{{ layer.description }}">
-      </div>
-      <div class="nes-field">
-        <label for="quantity_field_{{ layer.layer_id }}">Quantity ((</label>
-        <input type="text"
-               id="quantity_field_{{ layer.layer_id }}"
-               class="nes-input"
-               value="{{ layer.quantity }}">
-      </div>
-      <div class="nes-field">
-        <label for="units_field_{{ layer.layer_id }}">Units</label>
-        <input type="text"
-               id="units_field_{{ layer.layer_id }}"
-               class="nes-input"
-               value="{{ layer.units }}">
-      </div>
-      <div class="nes-field">
-        <label for="vmin_field_{{ layer.layer_id }}">vmin ("auto" to dynamically calculate)</label>
-        <input type="text"
-               id="vmin_field_{{ layer.layer_id }}"
-               class="nes-input"
-               value="{{ layer.vmin }}">
-      </div>
-      <div class="nes-field">
-        <label for="vmax_field_{{ layer.layer_id }}">vmax ("auto" to dynamically calculate)</label>
-        <input type="text"
-               id="vmax_field_{{ layer.layer_id }}"
-               class="nes-input"
-               value="{{ layer.vmax }}">
-      </div>
-      <div class="nes-field">
-        <label for="cmap_field_{{ layer.layer_id }}">Color map (any from matplotlib)</label>
-        <input type="text"
-               id="cmap_field_{{ layer.layer_id }}"
-               class="nes-input"
-               value="{{ layer.cmap }}">
-      </div>
-    </div>
-  {% endfor %}
+    {% endfor %}
+  </div>
