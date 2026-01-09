@@ -1,0 +1,48 @@
+<section id="listing">
+  {% if parent_directory %}
+    <div class="nes-container"
+         style="margin-bottom:0.5em"
+         class="nes-btn is-error"
+         hx-post="{{ base_url }}/add/list"
+         hx-ext="json-enc"
+         hx-vals='{"path":"{{ parent_directory }}"}'
+         hx-target="#listing"
+         hx-swap="outerHTML"
+         hx-trigger="click">
+      <h4>
+        <span class="nes-text is-error">< {{ parent_directory }}</span>/{{ requested_directory }}
+      </h4>
+    </div>
+  {% endif %}
+  {% if directories %}
+    <h3>Subdirectories</h3>
+    {% for directory in directories %}
+      <div class="nes-container"
+           style="margin-bottom:0.5em"
+           class="nes-btn is-error"
+           hx-post="{{ base_url }}/add/list"
+           hx-ext="json-enc"
+           hx-vals='{"path":"{{ directory }}"}'
+           hx-target="#listing"
+           hx-swap="outerHTML"
+           hx-trigger="click">
+        <h4>
+          {{ directory.name }} <span class="nes-text is-primary">></span>
+        </h4>
+      </div>
+    {% endfor %}
+  {% endif %}
+  {% if files %}
+    <h3>Maps</h3>
+    {% for file in files %}
+      <div class="nes-container" style="margin-bottom:0.5em">
+        <h4>
+          <label>
+            <input type="checkbox" class="nes-checkbox" />
+            <span>{{ file.name }}</span>
+          </label>
+        </h4>
+      </div>
+    {% endfor %}
+  {% endif %}
+</section>

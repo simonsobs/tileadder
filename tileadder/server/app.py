@@ -4,7 +4,8 @@ This does not require any access to the database, and purely uses the
 soauth authentication scheme. It is packed purely for simplicity.
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse
 from soauth.toolkit.fastapi import global_setup, mock_global_setup
 
@@ -30,6 +31,7 @@ apple_touch = FileResponse(
 async def lifespan(app: FastAPI):
     app.app_id = str(settings.app_id)
     app.engine = EngineManager(database_url=settings.database_url)
+    app.map_directory = settings.map_directory
     yield
 
 
@@ -49,6 +51,13 @@ else:
     app = mock_global_setup(app, grants=["maps:add", "maps:remove", "maps:admin"])
 
 template_endpoint(app=app, path="/", template="index.html", log_name="app.home")
+
+
+def print_exc(r: Request, e: RequestValidationError):
+    print(r._body, e)
+
+
+app.add_exception_handler(RequestValidationError, print_exc)
 
 app.include_router(router=current_router)
 app.include_router(router=add_router)

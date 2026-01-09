@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     public_key_filename: Path | None = None  # Suggest /data/public_key.pem
 
     database_url: str = "sqlite:///database.db"
+    map_directory: Path = Path(
+        "/Users/borrow-adm/Documents/Projects/tileadder/tileadder"
+    )
 
     model_config = SettingsConfigDict(env_prefix="TILEADDER_", env_file=".env")
 

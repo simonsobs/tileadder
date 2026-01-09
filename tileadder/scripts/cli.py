@@ -14,7 +14,7 @@ def run_server(**kwargs):
     for k, v in kwargs.items():
         os.environ[k] = v
 
-    uvicorn.run("tileadder.server.app:app", host="0.0.0.0")
+    uvicorn.run("tileadder.server.app:app", host="0.0.0.0", use_colors=True)
 
 
 def main():
