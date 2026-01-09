@@ -4,10 +4,13 @@ API endpoints for adding new maps to the system.
 
 from pathlib import Path
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
-from tileadder.service.filesystem import safe_read_directory_specific_file_types
+from tileadder.service.filesystem import (
+    safe_evaluate,
+    safe_read_directory_specific_file_types,
+)
 
 from .templating import LoggerDependency, TemplateDependency, templateify
 
@@ -20,14 +23,14 @@ def add_home(request: Request, log: LoggerDependency, templates: TemplateDepende
     return
 
 
-class GetDirectoryListRequest(BaseModel):
+class PathPOSTRequest(BaseModel):
     path: Path | None = None
 
 
 @router.post("/list")
 @templateify(template_name="htmx/directory_listing.html", log_name="add.list")
 def get_list(
-    x: GetDirectoryListRequest,
+    x: PathPOSTRequest,
     request: Request,
     log: LoggerDependency,
     templates: TemplateDependency,
@@ -51,3 +54,21 @@ def get_list(
         else None,
         "parent_directory": x.path.parent if show_directory else None,
     }
+
+
+@router.post("/evaluate")
+@templateify(template_name="htmx/evaluate.html", log_name="add.evaluate")
+def evaluate(
+    x: PathPOSTRequest,
+    request: Request,
+    log: LoggerDependency,
+    templates: TemplateDependency,
+):
+    try:
+        layers = safe_evaluate(
+            top_level=request.app.map_directory,
+            file_path=request.app.map_directory / x.path,
+        )
+    except OSError:
+        raise HTTPException(500, "Error with FITS file")
+    return {"filename": x.path.name, "layers": layers}

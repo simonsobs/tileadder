@@ -5,6 +5,8 @@ Service functions for interactions with the filesystem.
 import stat
 from pathlib import Path
 
+from tilemaker.metadata.generation import Layer, layers_from_fits
+
 
 def safe_read_directory(top_level: Path, search: Path) -> list[Path]:
     """
@@ -52,3 +54,23 @@ def safe_read_directory_specific_file_types(
     ]
 
     return files, directories
+
+
+def safe_evaluate(
+    top_level: Path, file_path: Path, extensions: tuple[str] = ("fits",)
+) -> list[Layer]:
+    if not file_path.absolute().is_relative_to(top_level.absolute()):
+        raise ValueError(f"Requested path {file_path} not within {top_level}")
+
+    valid_extension = False
+    for extension in extensions:
+        if file_path.name.endswith(extension):
+            valid_extension = True
+            break
+
+    if not valid_extension:
+        raise ValueError(f"Extension of {file_path} is not valid")
+
+    layers = layers_from_fits(filename=file_path)
+
+    return layers

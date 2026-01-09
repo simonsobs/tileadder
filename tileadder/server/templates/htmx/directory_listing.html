@@ -36,12 +36,15 @@
     <h3>Maps</h3>
     {% for file in files %}
       <div class="nes-container" style="margin-bottom:0.5em">
-        <h4>
-          <label>
-            <input type="checkbox" class="nes-checkbox" />
-            <span>{{ file.name }}</span>
-          </label>
-        </h4>
+        <span>{{ file.name }}</span>
+        <button class="nes-btn is-success"
+                hx-post="{{ base_url }}/add/evaluate"
+                hx-ext="json-enc"
+                hx-vals='{"path":"{{ file }}"}'
+                hx-trigger="click"
+                hx-swap="outerHTML"
+                style="margin-left:auto;
+                       margin-right:0">Evaluate</button>
       </div>
     {% endfor %}
   {% endif %}
