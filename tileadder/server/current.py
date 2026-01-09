@@ -10,6 +10,9 @@ from tileadder.service.existing import (
     read_map_group,
     read_map_groups,
     read_maps_for_map_group,
+    delete_map_group,
+    delete_map,
+    delete_band
 )
 
 from .templating import LoggerDependency, TemplateDependency, templateify
@@ -27,13 +30,14 @@ def groups(request: Request, log: LoggerDependency, templates: TemplateDependenc
 
 
 @router.delete("/groups/{map_group_id}")
-def delete_map_group(
+def delete_map_group_endpoint(
     map_group_id: int,
     request: Request,
     log: LoggerDependency,
     templates: TemplateDependency,
 ):
-    return True
+    with request.app.engine.session as s:
+        delete_map_group(session=s, map_group_id=map_group_id)
 
 
 @router.get("/maps/{map_group_id}")
@@ -55,13 +59,14 @@ def maps_from_map_group(
 
 
 @router.delete("/maps/{map_id}")
-def delete_map(
+def delete_map_endpoint(
     map_id: int,
     request: Request,
     log: LoggerDependency,
     templates: TemplateDependency,
 ):
-    return True
+    with request.app.engine.session as s:
+        delete_map(session=s, map_id=map_id)
 
 
 @router.get("/bands/{map_id}")
@@ -83,10 +88,11 @@ def bands_from_map(
 
 
 @router.delete("/bands/{band_id}")
-def delete_band(
+def delete_band_endpoint(
     band_id: int,
     request: Request,
     log: LoggerDependency,
     templates: TemplateDependency,
 ):
-    return True
+    with request.app.engine.session as s:
+        delete_band(session=s, band_id=band_id)
