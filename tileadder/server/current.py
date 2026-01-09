@@ -5,14 +5,14 @@ Handling for currently loaded maps
 from fastapi import APIRouter, Request
 
 from tileadder.service.existing import (
+    delete_band,
+    delete_map,
+    delete_map_group,
     read_bands_for_map,
     read_map,
     read_map_group,
     read_map_groups,
     read_maps_for_map_group,
-    delete_map_group,
-    delete_map,
-    delete_band
 )
 
 from .templating import LoggerDependency, TemplateDependency, templateify
