@@ -29,7 +29,7 @@
                value="{{ layer.description }}">
       </div>
       <div class="nes-field">
-        <label for="quantity_field_{{ layer.layer_id }}">Quantity</label>
+        <label for="quantity_field_{{ layer.layer_id }}">Quantity ((</label>
         <input type="text"
                id="quantity_field_{{ layer.layer_id }}"
                class="nes-input"
@@ -43,21 +43,21 @@
                value="{{ layer.units }}">
       </div>
       <div class="nes-field">
-        <label for="vmin_field_{{ layer.layer_id }}">vmin</label>
+        <label for="vmin_field_{{ layer.layer_id }}">vmin ("auto" to dynamically calculate)</label>
         <input type="text"
                id="vmin_field_{{ layer.layer_id }}"
                class="nes-input"
                value="{{ layer.vmin }}">
       </div>
       <div class="nes-field">
-        <label for="vmax_field_{{ layer.layer_id }}">vmax</label>
+        <label for="vmax_field_{{ layer.layer_id }}">vmax ("auto" to dynamically calculate)</label>
         <input type="text"
                id="vmax_field_{{ layer.layer_id }}"
                class="nes-input"
                value="{{ layer.vmax }}">
       </div>
       <div class="nes-field">
-        <label for="cmap_field_{{ layer.layer_id }}">Color Map</label>
+        <label for="cmap_field_{{ layer.layer_id }}">Color map (any from matplotlib)</label>
         <input type="text"
                id="cmap_field_{{ layer.layer_id }}"
                class="nes-input"
