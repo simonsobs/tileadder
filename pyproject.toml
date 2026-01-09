@@ -17,7 +17,8 @@ dependencies = [
 	"tilemaker",
 	"soauth",
 	"ruff",
-	"ty"
+	"ty",
+	"djlint"
 ]
 
 [project.scripts]
@@ -25,3 +26,6 @@ tileadder = "tileadder.scripts.cli:main"
 
 [tool.ruff.lint]
 extend-select = ["I"]
+
+[tool.djlint]
+indent = 2
