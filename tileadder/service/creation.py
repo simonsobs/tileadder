@@ -162,7 +162,6 @@ def parse_existing_map_to_orm(
             name=form.form_data.name,
             description=form.form_data.description,
             grant=form.form_data.required_grant,
-            layers=layers,
             map_id=map.id,
         )
 
