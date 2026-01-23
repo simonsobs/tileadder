@@ -95,6 +95,7 @@ def parse_map_form_to_orm(
                 units=x.units,
                 vmin=x.vmin,
                 vmax=x.vmax,
+                cmap=x.cmap,
                 **layer_metadata[x.layer_id],
             )
             for x in form.form_data.layers
