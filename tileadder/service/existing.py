@@ -4,7 +4,7 @@ Tools for looking at existing maps in the database.
 
 from collections import namedtuple
 
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from tilemaker.metadata.database import BandORM, MapGroupORM, MapORM
 
@@ -141,7 +141,9 @@ def read_bands_for_map(session: Session, map_id: int) -> list[band_item]:
 
 
 def delete_map_group(session: Session, map_group_id: int):
-    data = session.execute(select(MapGroupORM).where(MapGroupORM.id == map_group_id)).scalar_one_or_none()
+    data = session.execute(
+        select(MapGroupORM).where(MapGroupORM.id == map_group_id)
+    ).scalar_one_or_none()
     session.delete(data)
     session.commit()
 
@@ -149,7 +151,9 @@ def delete_map_group(session: Session, map_group_id: int):
 
 
 def delete_map(session: Session, map_id: int):
-    data = session.execute(select(MapORM).where(MapORM.id == map_id)).scalar_one_or_none()
+    data = session.execute(
+        select(MapORM).where(MapORM.id == map_id)
+    ).scalar_one_or_none()
     session.delete(data)
     session.commit()
 
@@ -157,7 +161,9 @@ def delete_map(session: Session, map_id: int):
 
 
 def delete_band(session: Session, band_id: int):
-    data = session.execute(select(BandORM).where(BandORM.id == band_id)).scalar_one_or_none()
+    data = session.execute(
+        select(BandORM).where(BandORM.id == band_id)
+    ).scalar_one_or_none()
     session.delete(data)
     session.commit()
 

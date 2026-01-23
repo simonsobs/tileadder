@@ -1,0 +1,27 @@
+<h3>Add to Existing Map</h3>
+<label for="mapgroupid">Map group</label>
+<div class="nes-select">
+  <select required
+          id="mapgroupid"
+          hx-get="{{ base_url }}/add/maps"
+          name="map_group_id"
+          hx-target="#mapid">
+    <option disabled selected value>Select a map group</option>
+    {% for map_group in map_groups %}<option value="{{ map_group.id }}">{{ map_group.name }}</option>{% endfor %}
+  </select>
+</div>
+<label for="mapid">Map name</label>
+<div class="nes-select">
+  <select id="mapid"></select>
+  <div class="buttonholder" style="margin-top:1em">
+    <button type="button"
+            class="nes-btn is-success"
+            hx-post="{{ base_url }}/add/existing"
+            hx-ext="json-enc"
+            hx-trigger="click"
+            hx-vals='js:{"map_id": mapid.value, "form_data": collectBandFormData({{ band_id | tojson }})}'
+            hx-target="closest .file-holder"
+            hx-swap="innerHTML"
+            style="margin-left:auto;
+                   margin-right:0">Submit</button>
+  </div>

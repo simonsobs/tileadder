@@ -9,11 +9,13 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 from tileadder.service.creation import (
+    ExistingMapFormData,
     MapFormData,
     create_map_group,
+    parse_existing_map_to_orm,
     parse_map_form_to_orm,
 )
-from tileadder.service.existing import read_map_groups
+from tileadder.service.existing import read_map_groups, read_maps_for_map_group
 from tileadder.service.filesystem import (
     safe_evaluate,
     safe_read_directory_specific_file_types,
@@ -128,3 +130,39 @@ def create(x: MapFormData, request: Request):
         )
 
     return HTMLResponse(f"<p>Created map {x.name} in group {x.map_group_id}.</p>")
+
+
+@router.get("/existing")
+@templateify(template_name="htmx/add_to_existing.html", log_name="add.existing_form")
+def existing_map_form(
+    bandid: str,
+    request: Request,
+    log: LoggerDependency,
+    templates: TemplateDependency,
+):
+    with request.app.engine.session as s:
+        map_groups = read_map_groups(session=s)
+
+    return {"map_groups": map_groups, "band_id": bandid}
+
+
+@router.get("/maps")
+def map_data_for_map_group(map_group_id: int, request: Request):
+    with request.app.engine.session as s:
+        maps = read_maps_for_map_group(session=s, map_group_id=map_group_id)
+
+    return HTMLResponse(
+        "\n".join(f"<option value='{m.map_id}'>{m.name}</option>" for m in maps)
+    )
+
+
+@router.post("/existing")
+def existing(x: ExistingMapFormData, request: Request):
+    with request.app.engine.session as s:
+        parse_existing_map_to_orm(
+            form=x,
+            session=s,
+            top_level=request.app.map_directory,
+        )
+
+    return HTMLResponse(f"<p>Added new band to {x.map_id}.</p>")

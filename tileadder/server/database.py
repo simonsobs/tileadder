@@ -2,9 +2,9 @@
 Tools for connecting to the database for tilemaker.
 """
 
-from sqlalchemy import Engine, create_engine
+from sqlalchemy import Engine, create_engine, event
 from sqlalchemy.orm import Session, sessionmaker
-from sqlalchemy import event
+
 
 class EngineManager:
     _engine: Engine | None = None
@@ -18,11 +18,12 @@ class EngineManager:
         if self._engine is None:
             self._engine = create_engine(self.database_url)
             if "sqlite" in self.database_url:
+
                 def _fk_pragma_on_connect(dbapi_con, con_record):
-                    dbapi_con.execute('pragma foreign_keys=ON')
-                
-                event.listen(self._engine, 'connect', _fk_pragma_on_connect)
-                    
+                    dbapi_con.execute("pragma foreign_keys=ON")
+
+                event.listen(self._engine, "connect", _fk_pragma_on_connect)
+
         return self._engine
 
     @property

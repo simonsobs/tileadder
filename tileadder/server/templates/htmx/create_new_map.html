@@ -17,13 +17,15 @@
   <label for="newmaprequiredgrant">Reqiured Grant</label>
   <input type="text" id="newmaprequiredgrant" class="nes-input">
 </div>
-<button type="button"
-        class="nes-btn is-success"
-        hx-post="{{ base_url }}/add/create"
-        hx-ext="json-enc"
-        hx-trigger="click"
-        hx-vals='js:{"name": newmapname.value, "description": newmapdescription.value, "map_group_id": mapgroupid.value, "required_grant": newmaprequiredgrant.value, "form_data": collectBandFormData({{ band_id | tojson }})}'
-        hx-target="closest .file-holder"
-        hx-swap="innerHTML"
-        style="margin-left:auto;
-               margin-right:0">Submit</button>
+<div class="buttonholder" style="margin-top:1em">
+  <button type="button"
+          class="nes-btn is-success"
+          hx-post="{{ base_url }}/add/create"
+          hx-ext="json-enc"
+          hx-trigger="click"
+          hx-vals='js:{"name": newmapname.value, "description": newmapdescription.value, "map_group_id": mapgroupid.value, "required_grant": newmaprequiredgrant.value, "form_data": collectBandFormData({{ band_id | tojson }})}'
+          hx-target="closest .file-holder"
+          hx-swap="innerHTML"
+          style="margin-left:auto;
+                 margin-right:0">Submit</button>
+</div>

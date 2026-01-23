@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Literal
 
 from pydantic import BaseModel, Field, TypeAdapter
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from tilemaker.metadata.database import (
     BandORM,
@@ -58,6 +59,11 @@ class MapFormData(BaseModel):
     form_data: BandFormData
 
 
+class ExistingMapFormData(BaseModel):
+    map_id: str
+    form_data: BandFormData
+
+
 def parse_map_form_to_orm(
     form: MapFormData,
     session: Session,
@@ -66,11 +72,13 @@ def parse_map_form_to_orm(
 ) -> MapORM:
     # Re-parse from filesystem to grab base data.
     underlying_layers = safe_evaluate(
-        top_level=top_level, file_path=top_level / form.form_data.path, extensions=extensions
+        top_level=top_level,
+        file_path=top_level / form.form_data.path,
+        extensions=extensions,
     )
-    
+
     provider_adapter = TypeAdapter(type(underlying_layers[0].provider))
-    
+
     layer_metadata = {
         x.layer_id: {
             "provider": provider_adapter.dump_python(x.provider, mode="json"),
@@ -79,7 +87,7 @@ def parse_map_form_to_orm(
             "bounding_top": x.bounding_top,
             "bounding_bottom": x.bounding_bottom,
             "number_of_levels": x.number_of_levels,
-            "tile_size": x.tile_size
+            "tile_size": x.tile_size,
         }
         for x in underlying_layers
     }
@@ -124,6 +132,78 @@ def parse_map_form_to_orm(
     )
 
     session.add(map)
+    session.commit()
+
+    return map
+
+
+def parse_existing_map_to_orm(
+    form: MapFormData,
+    session: Session,
+    top_level: Path,
+    extensions: tuple[str] = ("fits",),
+) -> MapORM:
+    map = session.execute(
+        select(MapORM).where(MapORM.map_id == form.map_id)
+    ).scalar_one_or_none()
+
+    if map is None:
+        raise ValueError(f"Map with ID {form.map_id} does not exist")
+
+    # Re-parse from filesystem to grab base data.
+    underlying_layers = safe_evaluate(
+        top_level=top_level,
+        file_path=top_level / form.form_data.path,
+        extensions=extensions,
+    )
+
+    provider_adapter = TypeAdapter(type(underlying_layers[0].provider))
+
+    layer_metadata = {
+        x.layer_id: {
+            "provider": provider_adapter.dump_python(x.provider, mode="json"),
+            "bounding_left": x.bounding_left,
+            "bounding_right": x.bounding_right,
+            "bounding_top": x.bounding_top,
+            "bounding_bottom": x.bounding_bottom,
+            "number_of_levels": x.number_of_levels,
+            "tile_size": x.tile_size,
+        }
+        for x in underlying_layers
+    }
+
+    try:
+        layers = [
+            LayerORM(
+                layer_id=x.layer_id,
+                name=x.name,
+                description=x.description,
+                grant=form.form_data.required_grant,
+                quantity=x.quantity,
+                units=x.units,
+                vmin=x.vmin,
+                vmax=x.vmax,
+                cmap=x.cmap,
+                **layer_metadata[x.layer_id],
+            )
+            for x in form.form_data.layers
+            if x.included
+        ]
+    except KeyError:
+        raise ValueError(
+            f"Layers {[x.layer_id for x in form.form_data.layers]} not found in {form.form_data.path}"
+        )
+
+    band = BandORM(
+        band_id=form.form_data.band_id,
+        name=form.form_data.name,
+        description=form.form_data.description,
+        grant=form.form_data.required_grant,
+        layers=layers,
+        map_id=map.id,
+    )
+
+    session.add(band)
     session.commit()
 
     return map

@@ -88,11 +88,14 @@
         </div>
       </div>
     {% endfor %}
-    <div class="buttonholder">
+    <div class="buttonholder" style="margin-top:1em">
       <button class="nes-btn is-success"
               hx-get="{{ base_url }}/add/create?bandid={{ band_id }}"
               hx-trigger="click"
               hx-target="closest .buttonholder">Create New Map</button>
-      <button class="nes-btn is-warning">Add to Existing Map</button>
+      <button class="nes-btn is-warning"
+              hx-get="{{ base_url }}/add/existing?bandid={{ band_id }}"
+              hx-trigger="click"
+              hx-target="closest .buttonholder">Add to Existing Map</button>
     </div>
   </div>
