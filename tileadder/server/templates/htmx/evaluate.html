@@ -1,6 +1,7 @@
-<div class="nes-container with-title">
+<div class="nes-container with-title file-holder">
   <p class="title">{{ filename }}</p>
   <h3>Band Information</h3>
+  <div class="full-path" style="display:none">{{ path }}</div>
   <div class="nes-field">
     <label for="band_name_{{ band_id }}">Band Name</label>
     <input type="text"
@@ -21,8 +22,9 @@
   </div>
   <h3 style="margin-top:1em">Layers</h3>
   {% for layer in layers %}
-    <div class="nes-container with-title" style="margin-top:0.5em">
-      <p class="title">{{ layer.layer_id }}</p>
+    <div class="nes-container with-title layer-form is-primary"
+         style="margin-top:0.5em">
+      <p class="title layer-id">{{ layer.layer_id }}</p>
       <p>
         <span class="nes-text is-primary">HDU</span> {{ layer.provider.hdu }},
         <span class="nes-text is-primary">Index</span> {{ layer.provider.index }},
@@ -86,4 +88,11 @@
         </div>
       </div>
     {% endfor %}
+    <div class="buttonholder">
+      <button class="nes-btn is-success"
+              hx-get="{{ base_url }}/add/create?bandid={{ band_id }}"
+              hx-trigger="click"
+              hx-target="closest .buttonholder">Create New Map</button>
+      <button class="nes-btn is-warning">Add to Existing Map</button>
+    </div>
   </div>

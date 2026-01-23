@@ -1,0 +1,29 @@
+<h3>New Map Details</h3>
+<label for="map-group">Map group</label>
+<div class="nes-select">
+  <select required id="mapgroupid">
+    {% for map_group in map_groups %}<option value="{{ map_group.id }}">{{ map_group.name }}</option>{% endfor %}
+  </select>
+</div>
+<div class="nes-field">
+  <label for="newmapname">Name</label>
+  <input type="text" id="newmapname" class="nes-input">
+</div>
+<div class="nes-field">
+  <label for="newmapdescription">Description</label>
+  <input type="text" id="newmapdescription" class="nes-input">
+</div>
+<div class="nes-field">
+  <label for="newmaprequiredgrant">Reqiured Grant</label>
+  <input type="text" id="newmaprequiredgrant" class="nes-input">
+</div>
+<button type="button"
+        class="nes-btn is-success"
+        hx-post="{{ base_url }}/add/create"
+        hx-ext="json-enc"
+        hx-trigger="click"
+        hx-vals='js:{"name": newmapname.value, "description": newmapdescription.value, "map_group_id": mapgroupid.value, "required_grant": newmaprequiredgrant.value, "form_data": collectBandFormData({{ band_id | tojson }})}'
+        hx-target="closest .file-holder"
+        hx-swap="innerHTML"
+        style="margin-left:auto;
+               margin-right:0">Submit</button>

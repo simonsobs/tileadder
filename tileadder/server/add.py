@@ -5,9 +5,15 @@ API endpoints for adding new maps to the system.
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request, Response
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
-from tileadder.service.creation import create_map_group
+from tileadder.service.creation import (
+    MapFormData,
+    create_map_group,
+    parse_map_form_to_orm,
+)
+from tileadder.service.existing import read_map_groups
 from tileadder.service.filesystem import (
     safe_evaluate,
     safe_read_directory_specific_file_types,
@@ -74,6 +80,7 @@ def evaluate(
         raise HTTPException(500, "Error with FITS file")
     return {
         "filename": x.path.name,
+        "path": x.path,
         "layers": layers,
         "band_id": layers[0].layer_id.replace("-0-", "-"),
     }
@@ -95,3 +102,29 @@ def new_group(x: GroupCreationRequest, request: Request):
     response = Response(content=None, status_code=201, headers={"HX-Refresh": "true"})
 
     return response
+
+
+@router.get("/create")
+@templateify(template_name="htmx/create_new_map.html", log_name="add.create_map_form")
+def create_map_form(
+    bandid: str,
+    request: Request,
+    log: LoggerDependency,
+    templates: TemplateDependency,
+):
+    with request.app.engine.session as s:
+        map_groups = read_map_groups(session=s)
+
+    return {"map_groups": map_groups, "band_id": bandid}
+
+
+@router.post("/create")
+def create(x: MapFormData, request: Request):
+    with request.app.engine.session as s:
+        parse_map_form_to_orm(
+            form=x,
+            session=s,
+            top_level=request.app.map_directory,
+        )
+
+    return HTMLResponse(f"<p>Created map {x.name} in group {x.map_group_id}.</p>")

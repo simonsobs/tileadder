@@ -54,7 +54,8 @@ template_endpoint(app=app, path="/", template="index.html", log_name="app.home")
 
 
 def print_exc(r: Request, e: RequestValidationError):
-    print(r._body, e)
+    print(r.body(), e)
+    raise e
 
 
 app.add_exception_handler(RequestValidationError, print_exc)

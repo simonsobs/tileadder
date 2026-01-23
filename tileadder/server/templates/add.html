@@ -16,3 +16,83 @@
            hx-vals='{}'>
   </section>
 {% endblock %}
+{% block scripts %}
+  <script>
+      function collectBandFormData(bandId) {
+          // Find the band-level name input and walk up to the enclosing container
+          const bandNameInput = document.getElementById(`band_name_${bandId}`);
+
+          if (!bandNameInput) {
+              throw new Error(`Band with id ${bandId} not found`);
+          }
+
+          const bandContainer = bandNameInput.closest('.file-holder');
+          if (!bandContainer) {
+              throw new Error(`Unable to locate band container for band ${bandId}`);
+          }
+
+          const fullPathContainer = bandContainer.querySelector('.full-path');
+          if (!fullPathContainer) {
+              throw new Error(`Unable to locate path container for band ${bandId}`);
+          }
+
+          const layers = new Array();
+
+          const layerForms = bandContainer.querySelectorAll(
+              '.layer-form'
+          );
+
+          layerForms.forEach(layerEl => {
+              const layerId = layerEl.querySelector('.layer-id')?.textContent?.trim();
+              if (!layerId) return;
+
+              const newLayer = {
+                  layer_id: layerId,
+                  included: layerEl.querySelector(
+                      `#include_field_${layerId}`
+                  )?.checked ?? false,
+                  name: layerEl.querySelector(
+                      `#name_field_${layerId}`
+                  )?.value ?? null,
+                  description: layerEl.querySelector(
+                      `#desc_field_${layerId}`
+                  )?.value ?? null,
+                  quantity: layerEl.querySelector(
+                      `#quantity_field_${layerId}`
+                  )?.value ?? null,
+                  units: layerEl.querySelector(
+                      `#units_field_${layerId}`
+                  )?.value ?? null,
+                  vmin: layerEl.querySelector(
+                      `#vmin_field_${layerId}`
+                  )?.value ?? null,
+                  vmax: layerEl.querySelector(
+                      `#vmax_field_${layerId}`
+                  )?.value ?? null,
+                  cmap: layerEl.querySelector(
+                      `#cmap_field_${layerId}`
+                  )?.value ?? null
+              };
+
+              layers.push(newLayer);
+          });
+
+          const bandData = {
+              band_id: bandId,
+              name: bandNameInput.value,
+              description: bandContainer.querySelector(
+                  `#band_description_${bandId}`
+              )?.value ?? null,
+              required_grant: bandContainer.querySelector(
+                  `#band_grant${bandId}`
+              )?.value ?? null,
+              path: fullPathContainer.textContent,
+              layers: layers.slice(0, 2)
+          };
+
+          console.log(bandData, layerForms.length)
+
+          return bandData;
+      }
+  </script>
+{% endblock %}
