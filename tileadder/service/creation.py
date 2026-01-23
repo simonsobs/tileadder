@@ -194,14 +194,23 @@ def parse_existing_map_to_orm(
             f"Layers {[x.layer_id for x in form.form_data.layers]} not found in {form.form_data.path}"
         )
 
-    band = BandORM(
-        band_id=form.form_data.band_id,
-        name=form.form_data.name,
-        description=form.form_data.description,
-        grant=form.form_data.required_grant,
-        layers=layers,
-        map_id=map.id,
-    )
+    # We may have an existing band with that name. Let's do the smart thing
+    # and upsert it.
+    band = session.execute(
+        select(BandORM).where(BandORM.name == form.form_data.name)
+    ).scalar_one_or_none()
+
+    if band is None:
+        band = BandORM(
+            band_id=form.form_data.band_id,
+            name=form.form_data.name,
+            description=form.form_data.description,
+            grant=form.form_data.required_grant,
+            layers=layers,
+            map_id=map.id,
+        )
+    else:
+        band.layers += layers
 
     session.add(band)
     session.commit()
