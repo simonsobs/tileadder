@@ -4,6 +4,7 @@ Tools for looking at existing maps in the database.
 
 from collections import namedtuple
 
+from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from tilemaker.metadata.database import BandORM, MapGroupORM, MapORM
@@ -138,6 +139,23 @@ def read_bands_for_map(session: Session, map_id: int) -> list[band_item]:
         )
         for x in results
     ]
+
+
+class MapGroupEdit(BaseModel):
+    group_name: str
+    description: str | None
+    grant: str | None
+
+
+def update_map_group(session: Session, map_group_id: int, edit: MapGroupEdit):
+    map_group = session.get(MapGroupORM, map_group_id)
+
+    map_group.name = edit.group_name
+    map_group.description = edit.description
+    map_group.grant = edit.grant
+
+    session.add(map_group)
+    session.commit()
 
 
 def delete_map_group(session: Session, map_group_id: int):

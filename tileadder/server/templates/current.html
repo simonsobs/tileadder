@@ -14,7 +14,11 @@
       <div class="nes-container">
         <h3>{{ map_group.name }}</h3>
         <p>
-          <span class="nes-text is-error">Requires</span> {{ map_group.grant }}
+          {% if map_group.grant %}
+            <span class="nes-text is-error">Requires</span> {{ map_group.grant }}
+          {% else %}
+            <span class="nes-text is-success">Public, no grant required</span>
+          {% endif %}
         </p>
         <button class="nes-btn is-error"
                 hx-delete="{{ base_url }}/current/groups/{{ map_group.id }}"
@@ -25,6 +29,11 @@
                 hx-get="{{ base_url }}/current/maps/{{ map_group.id }}"
                 hx-trigger="click"
                 hx-swap="outerHTML">Maps</button>
+        <button class="nes-btn is-warning"
+                hx-get="{{ base_url }}/current/groups/edit/{{ map_group.id }}"
+                hx-trigger="click"
+                hx-target="closest .nes-container"
+                hx-swap="innerHTML">Edit</button>
       </div>
     </section>
   {% endfor %}
