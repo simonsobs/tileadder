@@ -5,7 +5,11 @@
       <span class="nes-text is-primary">{{ band.band_id }}</span>: {{ band.description }}
     </p>
     <p>
-      <span class="nes-text is-error">Requires</span> {{ band.grant }}
+      {% if band.grant %}
+        <span class="nes-text is-error">Requires</span> {{ band.grant }}
+      {% else %}
+        <span class="nes-text is-success">Public, no grant required</span>
+      {% endif %}
     </p>
     <ul class="nes-list is-disc">
       {% for layer in band.layers %}

@@ -25,15 +25,15 @@
                 hx-swap="delete"
                 hx-target="closest .nes-container"
                 hx-confirm="Are you sure you wish to delete map group {{ map_group.name }}?">Delete</button>
-        <button class="nes-btn is-success"
-                hx-get="{{ base_url }}/current/maps/{{ map_group.id }}"
-                hx-trigger="click"
-                hx-swap="outerHTML">Maps</button>
         <button class="nes-btn is-warning"
                 hx-get="{{ base_url }}/current/groups/edit/{{ map_group.id }}"
                 hx-trigger="click"
                 hx-target="closest .nes-container"
                 hx-swap="innerHTML">Edit</button>
+        <button class="nes-btn is-success"
+                hx-get="{{ base_url }}/current/maps/{{ map_group.id }}"
+                hx-trigger="click"
+                hx-swap="outerHTML">Maps</button>
       </div>
     </section>
   {% endfor %}

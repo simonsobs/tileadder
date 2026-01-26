@@ -5,7 +5,11 @@
       <span class="nes-text is-primary">{{ map.map_id }}</span>: {{ map.description }}
     </p>
     <p>
-      <span class="nes-text is-error">Requires</span> {{ map.grant }}
+      {% if map.grant %}
+        <span class="nes-text is-error">Requires</span> {{ map.grant }}
+      {% else %}
+        <span class="nes-text is-success">Public, no grant required</span>
+      {% endif %}
     </p>
     <button class="nes-btn is-error"
             hx-delete="{{ base_url }}/current/maps/{{ map.id }}"
