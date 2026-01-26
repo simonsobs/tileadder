@@ -1,0 +1,24 @@
+<div class="nes-field">
+  <label for="map_name">Name</label>
+  <input type="text" id="map_name" class="nes-input" value="{{ map.name }}">
+</div>
+<div class="nes-field">
+  <label for="description">Description</label>
+  <input type="text"
+         id="description"
+         class="nes-input"
+         value="{{ map.description }}">
+</div>
+<div class="nes-field">
+  <label for="grant">Required Grant (empty for public access, propagates to children)</label>
+  <input type="text"
+         id="grant"
+         class="nes-input"
+         value='{{ map.grant or "" }}'>
+</div>
+<button type="submit"
+        class="nes-btn is-success"
+        hx-post="{{ base_url }}/current/maps/edit/{{ map.id }}"
+        hx-ext="json-enc"
+        hx-vals='js:{"description": description.value, "grant": grant.value, "map_name": map_name.value}'
+        style="margin-top:1em">Submit</button>

@@ -16,6 +16,11 @@
             hx-swap="delete"
             hx-target="closest .nes-container"
             hx-confirm="Are you sure you wish to delete map {{ map.name }}?">Delete</button>
+    <button class="nes-btn is-warning"
+            hx-get="{{ base_url }}/current/maps/edit/{{ map.id }}"
+            hx-trigger="click"
+            hx-target="closest .nes-container"
+            hx-swap="innerHTML">Edit</button>
     <button class="nes-btn is-success"
             hx-get="{{ base_url }}/current/bands/{{ map.id }}"
             hx-trigger="click"

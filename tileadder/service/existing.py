@@ -158,6 +158,30 @@ def update_map_group(session: Session, map_group_id: int, edit: MapGroupEdit):
     session.commit()
 
 
+class MapEdit(BaseModel):
+    map_name: str
+    description: str | None
+    grant: str | None
+
+
+def update_map(session: Session, map_id: int, edit: MapEdit):
+    map = session.get(MapORM, map_id)
+
+    map.name = edit.map_name
+    map.description = edit.description
+    map.grant = edit.grant
+
+    for band in map.bands:
+        band.grant = edit.grant
+        for layer in band.layers:
+            layer.grant = edit.grant
+            session.add(layer)
+        session.add(band)
+    session.add(map)
+
+    session.commit()
+
+
 def delete_map_group(session: Session, map_group_id: int):
     data = session.execute(
         select(MapGroupORM).where(MapGroupORM.id == map_group_id)

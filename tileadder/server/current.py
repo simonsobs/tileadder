@@ -5,6 +5,7 @@ Handling for currently loaded maps
 from fastapi import APIRouter, Request, Response
 
 from tileadder.service.existing import (
+    MapEdit,
     MapGroupEdit,
     delete_band,
     delete_map,
@@ -14,6 +15,7 @@ from tileadder.service.existing import (
     read_map_group,
     read_map_groups,
     read_maps_for_map_group,
+    update_map,
     update_map_group,
 )
 
@@ -84,6 +86,32 @@ def maps_from_map_group(
         maps = read_maps_for_map_group(session=s, map_group_id=map_group_id)
 
     return {"map_group": map_group, "maps": maps}
+
+
+@router.get("/maps/edit/{map_id}")
+@templateify(template_name="htmx/edit_map.html", log_name="current.edit_map_form")
+def get_map_edit_form(
+    map_id: int,
+    request: Request,
+    log: LoggerDependency,
+    templates: TemplateDependency,
+):
+    with request.app.engine.session as s:
+        map = read_map(session=s, map_id=map_id)
+
+    return {"map": map}
+
+
+@router.post("/maps/edit/{map_id}")
+def perform_edit_of_map(
+    map_id: int,
+    content: MapEdit,
+    request: Request,
+) -> Response:
+    with request.app.engine.session as s:
+        update_map(session=s, map_id=map_id, edit=content)
+
+    return Response(headers={"HX-Refresh": "true"})
 
 
 @router.delete("/maps/{map_id}")
