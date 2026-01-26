@@ -55,7 +55,10 @@ def logger():
 
 templates = setup_templating(
     template_directory=Path(__file__.replace("templating.py", "templates")),
-    available_strings={"base_url": settings.app_base_url},
+    available_strings={
+        "base_url": settings.app_base_url,
+        "default_required_grant": settings.default_required_grant,
+    },
 )
 
 LoggerDependency = Annotated[FilteringBoundLogger, Depends(logger)]

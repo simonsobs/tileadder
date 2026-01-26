@@ -21,7 +21,10 @@
   </div>
   <div class="nes-field">
     <label for="band_grant_{{ band_id }}">Required Grant</label>
-    <input type="text" id="band_grant{{ band_id }}" class="nes-input">
+    <input type="text"
+           id="band_grant{{ band_id }}"
+           class="nes-input"
+           value="{{ default_required_grant }}">
   </div>
   <h3 style="margin-top:1em">Layers</h3>
   {% for layer in layers %}

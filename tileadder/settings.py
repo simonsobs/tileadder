@@ -32,6 +32,8 @@ class Settings(BaseSettings):
         "/Users/borrow-adm/Documents/Projects/tileadder/tileadder"
     )
 
+    default_required_grant: str = "simonsobs"
+
     model_config = SettingsConfigDict(env_prefix="TILEADDER_", env_file=".env")
 
     @model_validator(mode="after")
