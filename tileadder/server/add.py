@@ -23,6 +23,8 @@ from tileadder.service.filesystem import (
 
 from .templating import LoggerDependency, TemplateDependency, templateify
 
+from starlette.authentication import requires
+
 router = APIRouter(prefix="/add")
 
 
@@ -37,6 +39,7 @@ class PathPOSTRequest(BaseModel):
 
 
 @router.post("/list")
+@requires("maps:add")
 @templateify(template_name="htmx/directory_listing.html", log_name="add.list")
 def get_list(
     x: PathPOSTRequest,
@@ -66,6 +69,7 @@ def get_list(
 
 
 @router.post("/evaluate")
+@requires("maps:add")
 @templateify(template_name="htmx/evaluate.html", log_name="add.evaluate")
 def evaluate(
     x: PathPOSTRequest,
@@ -95,6 +99,7 @@ class GroupCreationRequest(BaseModel):
 
 
 @router.post("/groups")
+@requires("maps:add")
 def new_group(x: GroupCreationRequest, request: Request):
     with request.app.engine.session as s:
         create_map_group(
@@ -107,6 +112,7 @@ def new_group(x: GroupCreationRequest, request: Request):
 
 
 @router.get("/create")
+@requires("maps:add")
 @templateify(template_name="htmx/create_new_map.html", log_name="add.create_map_form")
 def create_map_form(
     bandid: str,
@@ -121,6 +127,7 @@ def create_map_form(
 
 
 @router.post("/create")
+@requires("maps:add")
 def create(x: MapFormData, request: Request):
     with request.app.engine.session as s:
         parse_map_form_to_orm(
@@ -133,6 +140,7 @@ def create(x: MapFormData, request: Request):
 
 
 @router.get("/existing")
+@requires("maps:add")
 @templateify(template_name="htmx/add_to_existing.html", log_name="add.existing_form")
 def existing_map_form(
     bandid: str,
@@ -147,6 +155,7 @@ def existing_map_form(
 
 
 @router.get("/maps")
+@requires("maps:add")
 def map_data_for_map_group(map_group_id: int, request: Request):
     with request.app.engine.session as s:
         maps = read_maps_for_map_group(session=s, map_group_id=map_group_id)
@@ -157,6 +166,7 @@ def map_data_for_map_group(map_group_id: int, request: Request):
 
 
 @router.post("/existing")
+@requires("maps:add")
 def existing(x: ExistingMapFormData, request: Request):
     with request.app.engine.session as s:
         parse_existing_map_to_orm(

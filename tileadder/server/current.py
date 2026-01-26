@@ -19,12 +19,15 @@ from tileadder.service.existing import (
     update_map_group,
 )
 
+from starlette.authentication import requires
+
 from .templating import LoggerDependency, TemplateDependency, templateify
 
 router = APIRouter(prefix="/current")
 
 
 @router.get("")
+@requires("maps:edit")
 @templateify(template_name="current.html", log_name="current.index")
 def groups(request: Request, log: LoggerDependency, templates: TemplateDependency):
     with request.app.engine.session as s:
@@ -34,6 +37,7 @@ def groups(request: Request, log: LoggerDependency, templates: TemplateDependenc
 
 
 @router.delete("/groups/{map_group_id}")
+@requires("maps:edit")
 def delete_map_group_endpoint(
     map_group_id: int,
     request: Request,
@@ -45,6 +49,7 @@ def delete_map_group_endpoint(
 
 
 @router.get("/groups/edit/{map_group_id}")
+@requires("maps:edit")
 @templateify(template_name="htmx/edit_map_group.html", log_name="current.edit_form")
 def get_group_edit_form(
     map_group_id: int,
@@ -59,6 +64,7 @@ def get_group_edit_form(
 
 
 @router.post("/groups/edit/{map_group_id}")
+@requires("maps:edit")
 def perform_edit_of_map_group(
     map_group_id: int,
     content: MapGroupEdit,
@@ -71,6 +77,7 @@ def perform_edit_of_map_group(
 
 
 @router.get("/maps/{map_group_id}")
+@requires("maps:edit")
 @templateify(
     template_name="htmx/maps_from_map_group.html",
     log_name="current.maps_from_map_group",
@@ -89,6 +96,7 @@ def maps_from_map_group(
 
 
 @router.get("/maps/edit/{map_id}")
+@requires("maps:edit")
 @templateify(template_name="htmx/edit_map.html", log_name="current.edit_map_form")
 def get_map_edit_form(
     map_id: int,
@@ -103,6 +111,7 @@ def get_map_edit_form(
 
 
 @router.post("/maps/edit/{map_id}")
+@requires("maps:edit")
 def perform_edit_of_map(
     map_id: int,
     content: MapEdit,
@@ -115,6 +124,7 @@ def perform_edit_of_map(
 
 
 @router.delete("/maps/{map_id}")
+@requires("maps:edit")
 def delete_map_endpoint(
     map_id: int,
     request: Request,
@@ -126,6 +136,7 @@ def delete_map_endpoint(
 
 
 @router.get("/bands/{map_id}")
+@requires("maps:edit")
 @templateify(
     template_name="htmx/bands_from_map.html",
     log_name="current.bands_from_map",
@@ -144,6 +155,7 @@ def bands_from_map(
 
 
 @router.delete("/bands/{band_id}")
+@requires("maps:edit")
 def delete_band_endpoint(
     band_id: int,
     request: Request,

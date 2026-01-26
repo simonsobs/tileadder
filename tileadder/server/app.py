@@ -48,7 +48,7 @@ if settings.auth_type == "soauth":
         key_pair_type=key_type,
     )
 else:
-    app = mock_global_setup(app, grants=["maps:add", "maps:remove", "maps:admin"])
+    app = mock_global_setup(app, grants=["maps:add", "maps:edit", "maps:admin"])
 
 
 template_endpoint(app=app, path="/", template="index.html", log_name="app.home")
