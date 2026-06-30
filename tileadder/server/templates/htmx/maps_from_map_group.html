@@ -1,35 +1,40 @@
-{% for map in maps %}
-  <div class="panel-card mt-3 rounded-2xl p-4">
-    <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-      <div class="space-y-3">
-        <p class="strong-text text-sm font-semibold uppercase tracking-wide">{{ map.name }}</p>
-        <p class="body-copy text-sm">
-          <span class="accent-sky">{{ map.map_id }}</span>: {{ map.description }}
-        </p>
-        <p>
-      {% if map.grant %}
-          <span class="badge badge-red">Requires {{ map.grant }}</span>
-      {% else %}
-          <span class="badge badge-teal">Public, no grant required</span>
-      {% endif %}
-        </p>
+<section class="space-y-3">
+  {% for map in maps %}
+    <div class="panel-card map-card rounded-2xl p-4">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div class="space-y-3">
+          <p class="strong-text text-sm font-semibold uppercase tracking-wide">{{ map.name }}</p>
+          <p class="body-copy text-sm">
+            <span class="accent-sky">{{ map.map_id }}</span>: {{ map.description }}
+          </p>
+          <p>
+        {% if map.grant %}
+            <span class="badge badge-red">Requires {{ map.grant }}</span>
+        {% else %}
+            <span class="badge badge-teal">Public, no grant required</span>
+        {% endif %}
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3 lg:justify-end">
+          <button class="btn btn-red"
+              hx-delete="{{ base_url }}/current/maps/{{ map.id }}"
+              hx-swap="delete"
+              hx-target="closest .panel-card"
+              hx-confirm="Are you sure you wish to delete map {{ map.name }}?">Delete</button>
+          <button class="btn btn-orange"
+              hx-get="{{ base_url }}/current/maps/edit/{{ map.id }}"
+              hx-trigger="click"
+              hx-target="closest .map-card"
+              hx-swap="innerHTML">Edit</button>
+          <button class="btn btn-teal"
+              hx-get="{{ base_url }}/current/bands/{{ map.id }}"
+              hx-trigger="click"
+              hx-target="#band-children-{{ map.id }}"
+              hx-swap="innerHTML">Bands</button>
+        </div>
       </div>
-      <div class="flex flex-wrap gap-3 lg:justify-end">
-        <button class="btn btn-red"
-            hx-delete="{{ base_url }}/current/maps/{{ map.id }}"
-            hx-swap="delete"
-            hx-target="closest .panel-card"
-            hx-confirm="Are you sure you wish to delete map {{ map.name }}?">Delete</button>
-        <button class="btn btn-orange"
-            hx-get="{{ base_url }}/current/maps/edit/{{ map.id }}"
-            hx-trigger="click"
-            hx-target="closest .panel-card"
-            hx-swap="innerHTML">Edit</button>
-        <button class="btn btn-teal"
-            hx-get="{{ base_url }}/current/bands/{{ map.id }}"
-            hx-trigger="click"
-            hx-swap="outerHTML">Bands</button>
-      </div>
+      <div id="band-children-{{ map.id }}"
+           class="band-children mt-4 space-y-3"></div>
     </div>
-  </div>
-{% endfor %}
+  {% endfor %}
+</section>

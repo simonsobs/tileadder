@@ -14,7 +14,7 @@
   </section>
   {% for map_group in map_groups %}
     <section>
-      <div class="panel-card rounded-2xl p-5">
+      <div class="panel-card map-group-card rounded-2xl p-5">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div class="space-y-3">
             <h3 class="strong-text text-lg font-semibold uppercase tracking-wide">{{ map_group.name }}</h3>
@@ -41,9 +41,12 @@
             <button class="btn btn-teal"
                 hx-get="{{ base_url }}/current/maps/{{ map_group.id }}"
                 hx-trigger="click"
-                hx-swap="outerHTML">Maps</button>
+                hx-target="#map-group-children-{{ map_group.id }}"
+                hx-swap="innerHTML">Maps</button>
           </div>
         </div>
+        <div id="map-group-children-{{ map_group.id }}"
+             class="map-group-children mt-4 space-y-3"></div>
       </div>
     </section>
   {% endfor %}

@@ -1,34 +1,36 @@
-{% for band in bands %}
-  <div class="panel-card mt-3 rounded-2xl p-4">
-    <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-      <div class="space-y-3">
-        <p class="strong-text text-sm font-semibold uppercase tracking-wide">{{ band.name }}</p>
-        <p class="body-copy text-sm">
-          <span class="accent-sky">{{ band.band_id }}</span>: {{ band.description }}
-        </p>
-        <p>
-      {% if band.grant %}
-          <span class="badge badge-red">Requires {{ band.grant }}</span>
-      {% else %}
-          <span class="badge badge-teal">Public, no grant required</span>
-      {% endif %}
-        </p>
-        <ul class="list-accent list-disc space-y-1 pl-5 text-sm">
-          {% for layer in band.layers %}
-            <li>
-              <span class="accent-sky">{{ layer.layer_id }}</span>: {{ layer.name }} ({{ layer.quantity }} [{{ layer.units }}]) L{{ layer.number_of_levels }} ({{ layer.tile_size }}x{{ layer.tile_size }})
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-      <div class="flex lg:justify-end">
-        <button class="btn btn-red"
-            hx-delete="{{ base_url }}/current/bands/{{ band.id }}"
-            hx-swap="delete"
-            hx-target="closest .panel-card"
-            hx-confirm="Are you sure you wish to delete band {{ band.name }} from {{ map.name }}?">Delete</button>
+<section class="space-y-3">
+  {% for band in bands %}
+    <div class="panel-card rounded-2xl p-4">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div class="space-y-3">
+          <p class="strong-text text-sm font-semibold uppercase tracking-wide">{{ band.name }}</p>
+          <p class="body-copy text-sm">
+            <span class="accent-sky">{{ band.band_id }}</span>: {{ band.description }}
+          </p>
+          <p>
+        {% if band.grant %}
+            <span class="badge badge-red">Requires {{ band.grant }}</span>
+        {% else %}
+            <span class="badge badge-teal">Public, no grant required</span>
+        {% endif %}
+          </p>
+          <ul class="list-accent list-disc space-y-1 pl-5 text-sm">
+            {% for layer in band.layers %}
+              <li>
+                <span class="accent-sky">{{ layer.layer_id }}</span>: {{ layer.name }} ({{ layer.quantity }} [{{ layer.units }}]) L{{ layer.number_of_levels }} ({{ layer.tile_size }}x{{ layer.tile_size }})
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="flex lg:justify-end">
+          <button class="btn btn-red"
+              hx-delete="{{ base_url }}/current/bands/{{ band.id }}"
+              hx-swap="delete"
+              hx-target="closest .panel-card"
+              hx-confirm="Are you sure you wish to delete band {{ band.name }} from {{ map.name }}?">Delete</button>
+        </div>
       </div>
     </div>
-  </div>
-{% endfor %}
-{% if not bands %}<p class="muted-text mt-3 text-sm">No bands found</p>{% endif %}
+  {% endfor %}
+  {% if not bands %}<p class="muted-text text-sm">No bands found</p>{% endif %}
+</section>
