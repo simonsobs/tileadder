@@ -1,107 +1,121 @@
-<div class="nes-container with-title file-holder">
-  <p class="title">{{ filename }}</p>
-  <h3>Band Information</h3>
-  <p>
+<div class="file-holder rounded-2xl p-5">
+  <div class="flex flex-col gap-3 border-b pb-4 sm:flex-row sm:items-start sm:justify-between" style="border-color: rgba(0, 119, 187, 0.12)">
+    <div>
+      <p class="section-kicker">{{ filename }}</p>
+      <h3 class="strong-text mt-3 text-lg font-semibold uppercase tracking-wide">Band Information</h3>
+    </div>
+    <span class="badge badge-blue">Evaluate</span>
+  </div>
+  <p class="body-copy mt-4 text-sm leading-6">
     Note that bands with the same name will be automatically combined, with the existing description and grant requirements retained
   </p>
-  <div class="full-path" style="display:none">{{ path }}</div>
-  <div class="nes-field">
-    <label for="band_name_{{ band_id }}">Band Name</label>
+  <div class="full-path hidden">{{ path }}</div>
+  <div class="mt-5 grid gap-4 lg:grid-cols-3">
+    <div>
+      <label for="band_name_{{ band_id }}" class="field-label">Band Name</label>
     <input type="text"
            id="band_name_{{ band_id }}"
-           class="nes-input"
+           class="field-input"
            value="{{ default_band_name }}">
-  </div>
-  <div class="nes-field">
-    <label for="band_description_{{ band_id }}">Band Name</label>
+    </div>
+    <div>
+      <label for="band_description_{{ band_id }}" class="field-label">Band Description</label>
     <input type="text"
            id="band_description_{{ band_id }}"
-           class="nes-input"
+           class="field-input"
            value="{{ default_band_description }}">
-  </div>
-  <div class="nes-field">
-    <label for="band_grant_{{ band_id }}">Required Grant</label>
+    </div>
+    <div>
+      <label for="band_grant{{ band_id }}" class="field-label">Required Grant</label>
     <input type="text"
            id="band_grant{{ band_id }}"
-           class="nes-input"
+           class="field-input"
            value="{{ default_required_grant }}">
+    </div>
   </div>
-  <h3 style="margin-top:1em">Layers</h3>
+  <h3 class="section-kicker accent-teal mt-6">Layers</h3>
   {% for layer in layers %}
-    <div class="nes-container with-title layer-form is-primary"
-         style="margin-top:0.5em">
-      <p class="title layer-id">{{ layer.layer_id }}</p>
-      <p>
-        <span class="nes-text is-primary">HDU</span> {{ layer.provider.hdu }},
-        <span class="nes-text is-primary">Index</span> {{ layer.provider.index }},
-        <span class="nes-text is-primary">Levels</span> {{ layer.number_of_levels }},
-        <span class="nes-text is-primary">Tile size</span> {{ layer.tile_size }}
-        <label style="float: right">
+    <div class="layer-form mt-3 rounded-2xl p-4">
+      <div class="flex flex-col gap-3 border-b pb-4 lg:flex-row lg:items-start lg:justify-between" style="border-color: rgba(0, 119, 187, 0.12)">
+        <div>
+          <p class="layer-id accent-sky text-sm font-semibold uppercase tracking-wide">{{ layer.layer_id }}</p>
+          <p class="body-copy mt-2 text-sm leading-6">
+            <span class="accent-sky">HDU</span> {{ layer.provider.hdu }},
+            <span class="accent-sky">Index</span> {{ layer.provider.index }},
+            <span class="accent-sky">Levels</span> {{ layer.number_of_levels }},
+            <span class="accent-sky">Tile size</span> {{ layer.tile_size }}
+          </p>
+        </div>
+        <label class="badge badge-teal gap-3 self-start normal-case tracking-normal">
           <input type="checkbox"
-                 class="nes-checkbox"
+                 class="h-4 w-4 rounded"
+                 style="accent-color: var(--so-teal);"
                  checked
                  id="include_field_{{ layer.layer_id }}" />
           <span>Included</span>
         </label>
-        <div class="nes-field">
-          <label for="name_field_{{ layer.layer_id }}">Name</label>
+      </div>
+      <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div>
+          <label for="name_field_{{ layer.layer_id }}" class="field-label">Name</label>
           <input type="text"
                  id="name_field_{{ layer.layer_id }}"
-                 class="nes-input"
+                 class="field-input"
                  value="{{ layer.name }}">
         </div>
-        <div class="nes-field">
-          <label for="desc_field_{{ layer.layer_id }}">Description</label>
+        <div>
+          <label for="desc_field_{{ layer.layer_id }}" class="field-label">Description</label>
           <input type="text"
                  id="desc_field_{{ layer.layer_id }}"
-                 class="nes-input"
+                 class="field-input"
                  value="{{ layer.description }}">
         </div>
-        <div class="nes-field">
-          <label for="quantity_field_{{ layer.layer_id }}">Quantity</label>
+        <div>
+          <label for="quantity_field_{{ layer.layer_id }}" class="field-label">Quantity</label>
           <input type="text"
                  id="quantity_field_{{ layer.layer_id }}"
-                 class="nes-input"
+                 class="field-input"
                  value="{{ layer.quantity }}">
         </div>
-        <div class="nes-field">
-          <label for="units_field_{{ layer.layer_id }}">Units</label>
+        <div>
+          <label for="units_field_{{ layer.layer_id }}" class="field-label">Units</label>
           <input type="text"
                  id="units_field_{{ layer.layer_id }}"
-                 class="nes-input"
+                 class="field-input"
                  value="{{ layer.units }}">
         </div>
-        <div class="nes-field">
-          <label for="vmin_field_{{ layer.layer_id }}">vmin ("auto" to dynamically calculate)</label>
+        <div>
+          <label for="vmin_field_{{ layer.layer_id }}" class="field-label">vmin ("auto" to dynamically calculate)</label>
           <input type="text"
                  id="vmin_field_{{ layer.layer_id }}"
-                 class="nes-input"
+                 class="field-input"
                  value="{{ layer.vmin }}">
         </div>
-        <div class="nes-field">
-          <label for="vmax_field_{{ layer.layer_id }}">vmax ("auto" to dynamically calculate)</label>
+        <div>
+          <label for="vmax_field_{{ layer.layer_id }}" class="field-label">vmax ("auto" to dynamically calculate)</label>
           <input type="text"
                  id="vmax_field_{{ layer.layer_id }}"
-                 class="nes-input"
+                 class="field-input"
                  value="{{ layer.vmax }}">
         </div>
-        <div class="nes-field">
-          <label for="cmap_field_{{ layer.layer_id }}">Color map (any from matplotlib)</label>
+        <div>
+          <label for="cmap_field_{{ layer.layer_id }}" class="field-label">Color map (any from matplotlib)</label>
           <input type="text"
                  id="cmap_field_{{ layer.layer_id }}"
-                 class="nes-input"
+                 class="field-input"
                  value="{{ layer.cmap }}">
         </div>
       </div>
+    </div>
     {% endfor %}
-    <div class="buttonholder" style="margin-top:1em">
-      <button class="nes-btn is-success"
+    <div class="band-action-slot mt-6 flex flex-wrap gap-3">
+      <button class="btn btn-teal"
               hx-get="{{ base_url }}/add/create?bandid={{ band_id }}"
               hx-trigger="click"
-              hx-target="closest .buttonholder">Create New Map</button>
-      <button class="nes-btn is-warning"
+              hx-target="closest .band-action-slot">Create New Map</button>
+      <button class="btn btn-orange"
               hx-get="{{ base_url }}/add/existing?bandid={{ band_id }}"
               hx-trigger="click"
-              hx-target="closest .buttonholder">Add to Existing Map</button>
+              hx-target="closest .band-action-slot">Add to Existing Map</button>
     </div>
   </div>

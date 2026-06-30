@@ -1,15 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
   <section>
-    <div class="nes-container with-title">
-      <p class="title">Load New Maps</p>
-      <p>
+        <div class="surface-card rounded-2xl p-5">
+            <div class="flex items-center justify-between gap-3">
+                <p class="section-kicker">Load New Maps</p>
+                <span class="badge badge-blue">Filesystem</span>
+            </div>
+            <p class="body-copy mt-4 text-sm leading-6">
         This page allows you to load new maps from the filesystem location
         that the server is configured to use.
       </p>
     </div>
   </section>
-  <section id="listing"
+    <section id="listing"
+                     class="space-y-4"
            hx-trigger="load"
            hx-post="{{ base_url }}/add/list"
            hx-ext="json-enc"
@@ -19,7 +23,6 @@
 {% block scripts %}
   <script>
       function collectBandFormData(bandId) {
-          // Find the band-level name input and walk up to the enclosing container
           const bandNameInput = document.getElementById(`band_name_${bandId}`);
 
           if (!bandNameInput) {
@@ -36,7 +39,7 @@
               throw new Error(`Unable to locate path container for band ${bandId}`);
           }
 
-          const layers = new Array();
+          const layers = [];
 
           const layerForms = bandContainer.querySelectorAll(
               '.layer-form'
@@ -89,8 +92,6 @@
               path: fullPathContainer.textContent,
               layers: layers
           };
-
-          console.log(bandData, layerForms.length)
 
           return bandData;
       }

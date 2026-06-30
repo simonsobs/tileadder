@@ -1,59 +1,267 @@
 <html>
   <head>
-    <link href="https://unpkg.com/nes.css@2.3.0/css/nes.min.css"
-          rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Simons Observatory Map Viewer Management</title>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Press+Start+2P&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
           rel="stylesheet">
     <style>
-        section {
-            margin-bottom: 1em;
-        }
+      :root {
+        --so-blue: #0077BB;
+        --so-sky: #33BBEE;
+        --so-teal: #009988;
+        --so-orange: #F26522;
+        --so-red: #CC3311;
+        --so-pink: #EE3377;
+        --so-gray: #BBBBBB;
+        --surface: rgba(255, 255, 255, 0.94);
+        --surface-soft: rgba(255, 255, 255, 0.88);
+        --surface-border: rgba(0, 119, 187, 0.18);
+        --surface-shadow: rgba(0, 119, 187, 0.10);
+        --text-main: #18405E;
+        --text-muted: rgba(24, 64, 94, 0.72);
+        --focus-ring: rgba(51, 187, 238, 0.24);
+      }
 
-        .buttonholder {
-            margin-right: 1em;
-            margin-bottom: 0em;
-        }
+      body {
+        margin: 0;
+        font-family: 'Atkinson Hyperlegible Mono', monospace;
+        color: var(--text-main);
+        background: #ffffff;
+      }
+
+      .hero-card,
+      .surface-card,
+      .panel-card,
+      .file-holder,
+      .layer-form,
+      .footer-card {
+        border: 1px solid var(--surface-border);
+        background: var(--surface);
+        box-shadow: 0 18px 44px var(--surface-shadow);
+      }
+
+      .hero-card {
+        backdrop-filter: blur(8px);
+      }
+
+      .site-footer {
+        border-top: 1px solid rgba(0, 119, 187, 0.18);
+        background: rgba(255, 255, 255, 0.80);
+        backdrop-filter: blur(8px);
+      }
+
+      .kicker,
+      .section-kicker {
+        color: var(--so-sky);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .page-title {
+        color: var(--so-orange);
+      }
+
+      .body-copy {
+        color: var(--text-muted);
+      }
+
+      .strong-text {
+        color: var(--text-main);
+      }
+
+      .field-label {
+        color: var(--text-muted);
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .field-input {
+        width: 100%;
+        margin-top: 0.5rem;
+        border: 1px solid rgba(0, 119, 187, 0.22);
+        border-radius: 0.75rem;
+        background: #ffffff;
+        color: var(--text-main);
+        padding: 0.65rem 0.8rem;
+        font: inherit;
+        box-sizing: border-box;
+      }
+
+      .field-input:focus {
+        outline: none;
+        border-color: var(--so-sky);
+        box-shadow: 0 0 0 3px var(--focus-ring);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 9999px;
+        border: 1px solid currentColor;
+        padding: 0.3rem 0.7rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .badge-blue {
+        color: var(--so-blue);
+        background: rgba(0, 119, 187, 0.10);
+      }
+
+      .badge-sky {
+        color: var(--so-sky);
+        background: rgba(51, 187, 238, 0.10);
+      }
+
+      .badge-teal {
+        color: var(--so-teal);
+        background: rgba(0, 153, 136, 0.10);
+      }
+
+      .badge-orange {
+        color: var(--so-orange);
+        background: rgba(242, 101, 34, 0.10);
+      }
+
+      .badge-red {
+        color: var(--so-red);
+        background: rgba(204, 51, 17, 0.10);
+      }
+
+      .badge-pink {
+        color: var(--so-pink);
+        background: rgba(238, 51, 119, 0.10);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.375rem;
+        border: 1px solid transparent;
+        padding: 0.325rem 0.45rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #ffffff;
+        transition: filter 160ms ease, transform 160ms ease;
+      }
+
+      .btn:hover {
+        filter: brightness(1.05);
+        transform: translateY(-1px);
+      }
+
+      .btn-blue {
+        background: var(--so-blue);
+        border-color: var(--so-blue);
+      }
+
+      .btn-teal {
+        background: var(--so-teal);
+        border-color: var(--so-teal);
+      }
+
+      .btn-orange {
+        background: var(--so-orange);
+        border-color: var(--so-orange);
+      }
+
+      .btn-red {
+        background: var(--so-red);
+        border-color: var(--so-red);
+      }
+
+      .btn-pink {
+        background: var(--so-pink);
+        border-color: var(--so-pink);
+      }
+
+      .accent-sky {
+        color: var(--so-sky);
+      }
+
+      .accent-teal {
+        color: var(--so-teal);
+      }
+
+      .accent-orange {
+        color: var(--so-orange);
+      }
+
+      .accent-red {
+        color: var(--so-red);
+      }
+
+      .muted-text {
+        color: var(--text-muted);
+      }
+
+      .list-accent {
+        color: var(--text-muted);
+      }
+
+      .list-accent li::marker {
+        color: var(--so-blue);
+      }
     </style>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <main style="padding-bottom:8em">
-      <div class="nes-container">
-        <h1 style="color:#F15A29">Simons Observatory</h1>
-        <h3>Map Viewer Management Service</h3>
-        {% block content %}<p>If you are seeing this, there is a rendering error.</p>{% endblock %}
-      </div>
-    </main>
-    <footer class="page-footer" style="position:fixed;bottom:0;width:100%">
-      {% block extrafooter %}{% endblock %}
-      <div class="nes-container with-title is-dark">
-        <p class="title">{{ user.display_name if user.display_name else "Login Here" }}</p>
-        <div style="display:flex;justify-content:flex-start">
-          {% if user.is_authenticated %}
-            <section class="buttonholder">
-              <button type="button"
-                      class="nes-btn is-primary"
-                      onclick="location.href='{{ base_url }}/current'">Manage</button>
-            </section>
-            <section class="buttonholder">
-              <button type="button"
-                      class="nes-btn is-success"
-                      onclick="location.href='{{ base_url }}/add'">Browse</button>
-            </section>
-          {% else %}
-            <section class="buttonholder">
-              <button type="button"
-                      class="nes-btn is-primary"
-                      onclick="location.href='{{ login_url }}'">Login</button>
-            </section>
-          {% endif %}
+  <body class="min-h-screen antialiased">
+    <div class="flex min-h-screen flex-col">
+      <main class="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
+        <div class="hero-card rounded-2xl p-5 sm:p-6">
+          <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p class="kicker">Simons Observatory</p>
+              <h1 class="page-title mt-2 text-2xl font-semibold uppercase tracking-wide sm:text-3xl">Map Viewer Management Service</h1>
+              <p class="body-copy mt-3 max-w-3xl text-sm leading-6">
+                Compact controls for managing map groups, maps, bands, and filesystem imports.
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+        {% block content %}<p class="surface-card rounded-xl px-4 py-3 text-sm accent-red">If you are seeing this, there is a rendering error.</p>{% endblock %}
+      </main>
+      <footer class="site-footer">
+        <div class="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
+          {% block extrafooter %}{% endblock %}
+          <div class="footer-card rounded-2xl p-4 sm:p-5">
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p class="section-kicker opacity-70">Session</p>
+                <p class="accent-sky mt-2 text-sm font-semibold uppercase tracking-wide">{{ user.display_name if user.display_name else "Login Here" }}</p>
+              </div>
+              <div class="flex flex-wrap gap-3">
+                {% if user.is_authenticated %}
+                  <button type="button"
+                          class="btn btn-blue"
+                          onclick="location.href='{{ base_url }}/current'">Manage</button>
+                  <button type="button"
+                          class="btn btn-teal"
+                          onclick="location.href='{{ base_url }}/add'">Browse</button>
+                {% else %}
+                  <button type="button"
+                          class="btn btn-blue"
+                          onclick="location.href='{{ login_url }}'">Login</button>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
       <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
       <script src="https://unpkg.com/htmx-ext-json-enc@2.0.1/json-enc.js"></script>
       {% block scripts %}{% endblock %}
-    </footer>
+    </div>
   </body>
 </html>

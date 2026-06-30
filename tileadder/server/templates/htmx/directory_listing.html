@@ -1,51 +1,43 @@
 <section id="listing">
   {% if parent_directory %}
-    <div class="nes-container"
-         style="margin-bottom:0.5em"
-         class="nes-btn is-error"
+    <button class="surface-card mb-3 flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-sm"
          hx-post="{{ base_url }}/add/list"
          hx-ext="json-enc"
          hx-vals='{"path":"{{ parent_directory }}"}'
          hx-target="#listing"
          hx-swap="outerHTML"
          hx-trigger="click">
-      <h4>
-        <span class="nes-text is-error">< {{ parent_directory }}</span>/{{ requested_directory }}
-      </h4>
-    </div>
+      <span class="accent-sky font-semibold uppercase tracking-wide">{{ requested_directory }}</span>
+      <span class="muted-text text-xs uppercase tracking-wide">&lt; {{ parent_directory }}</span>
+    </button>
   {% endif %}
   {% if directories %}
-    <h3>Subdirectories</h3>
+    <h3 class="section-kicker mb-3">Subdirectories</h3>
     {% for directory in directories %}
-      <div class="nes-container"
-           style="margin-bottom:0.5em"
-           class="nes-btn is-error"
+      <button class="surface-card mb-3 flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-sm"
            hx-post="{{ base_url }}/add/list"
            hx-ext="json-enc"
            hx-vals='{"path":"{{ directory }}"}'
            hx-target="#listing"
            hx-swap="outerHTML"
            hx-trigger="click">
-        <h4>
-          {{ directory.name }} <span class="nes-text is-primary">></span>
-        </h4>
-      </div>
+        <span class="strong-text font-semibold uppercase tracking-wide">{{ directory.name }}</span>
+        <span class="accent-sky">&gt;</span>
+      </button>
     {% endfor %}
   {% endif %}
   {% if files %}
-    <h3>Maps</h3>
+    <h3 class="section-kicker accent-teal mb-3 mt-6">Maps</h3>
     {% for file in files %}
-      <div class="nes-container" style="margin-bottom:0.5em">
-        <span>{{ file.name }}</span>
-        <button class="nes-btn is-success"
+      <div class="panel-card mb-3 flex flex-col gap-3 rounded-2xl p-4 sm:flex-row sm:items-center sm:justify-between">
+        <span class="strong-text text-sm">{{ file.name }}</span>
+        <button class="btn btn-teal sm:self-auto"
                 hx-post="{{ base_url }}/add/evaluate"
                 hx-ext="json-enc"
                 hx-vals='{"path":"{{ file }}"}'
                 hx-trigger="click"
-                hx-target="closest .nes-container"
-                hx-swap="outerHTML"
-                style="margin-left:auto;
-                       margin-right:0">Evaluate</button>
+                hx-target="closest .panel-card"
+                hx-swap="outerHTML">Evaluate</button>
       </div>
     {% endfor %}
   {% endif %}
