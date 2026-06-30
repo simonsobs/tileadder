@@ -88,6 +88,8 @@ def evaluate(
         "path": x.path,
         "layers": layers,
         "band_id": layers[0].layer_id.replace("-0-", "-"),
+        "default_band_name": x.path.name.replace(".fits", ""),
+        "default_band_description": f"Band created from {x.path}",
     }
 
 

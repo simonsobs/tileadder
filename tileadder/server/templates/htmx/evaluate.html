@@ -10,14 +10,14 @@
     <input type="text"
            id="band_name_{{ band_id }}"
            class="nes-input"
-           value="New Band">
+           value="{{ default_band_name }}">
   </div>
   <div class="nes-field">
     <label for="band_description_{{ band_id }}">Band Name</label>
     <input type="text"
            id="band_description_{{ band_id }}"
            class="nes-input"
-           value="Description for new band">
+           value="{{ default_band_description }}">
   </div>
   <div class="nes-field">
     <label for="band_grant_{{ band_id }}">Required Grant</label>
@@ -58,7 +58,7 @@
                  value="{{ layer.description }}">
         </div>
         <div class="nes-field">
-          <label for="quantity_field_{{ layer.layer_id }}">Quantity ((</label>
+          <label for="quantity_field_{{ layer.layer_id }}">Quantity</label>
           <input type="text"
                  id="quantity_field_{{ layer.layer_id }}"
                  class="nes-input"
