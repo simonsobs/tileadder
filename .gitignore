@@ -6,3 +6,6 @@ dist*
 *.egg-info
 .nova/*
 database.db
+
+*.fits
+*.bak
