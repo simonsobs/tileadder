@@ -18,7 +18,8 @@ dependencies = [
 	"soauth",
 	"ruff",
 	"ty",
-	"djlint"
+	"djlint",
+	"mapcat"
 ]
 
 [project.scripts]
