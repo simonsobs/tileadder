@@ -4,7 +4,9 @@ Service functions for interactions with the filesystem.
 
 import stat
 from pathlib import Path
+from typing import Any
 
+from pydantic import TypeAdapter
 from tilemaker.metadata.generation import Layer, layers_from_fits
 
 
@@ -74,3 +76,36 @@ def safe_evaluate(
     layers = layers_from_fits(filename=file_path)
 
     return layers
+
+
+def parse_layer_metadata(
+    top_level: Path, file_path: Path, extensions: tuple[str] = ("fits",)
+) -> dict[str, Any]:
+    # Re-parse from filesystem to grab base data.
+    underlying_layers = safe_evaluate(
+        top_level=top_level,
+        file_path=top_level / file_path,
+        extensions=extensions,
+    )
+
+    provider_adapter = TypeAdapter(type(underlying_layers[0].provider))
+
+    layer_metadata = {
+        x.layer_id: {
+            "provider": provider_adapter.dump_python(x.provider, mode="json"),
+            "bounding_left": x.bounding_left,
+            "bounding_right": x.bounding_right,
+            "bounding_top": x.bounding_top,
+            "bounding_bottom": x.bounding_bottom,
+            "number_of_levels": x.number_of_levels,
+            "tile_size": x.tile_size,
+            "quantity": x.quantity,
+            "units": x.units,
+            "vmin": x.vmin,
+            "vmax": x.vmax,
+            "cmap": x.cmap,
+        }
+        for x in underlying_layers
+    }
+
+    return layer_metadata

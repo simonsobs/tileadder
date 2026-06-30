@@ -5,7 +5,7 @@ Tools for creating new database rows.
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, Field, TypeAdapter
+from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from tilemaker.metadata.database import (
@@ -15,7 +15,7 @@ from tilemaker.metadata.database import (
     MapORM,
 )
 
-from tileadder.service.filesystem import safe_evaluate
+from tileadder.service.filesystem import parse_layer_metadata
 
 
 def create_map_group(
@@ -70,40 +70,28 @@ def parse_map_form_to_orm(
     top_level: Path,
     extensions: tuple[str] = ("fits",),
 ) -> MapORM:
-    # Re-parse from filesystem to grab base data.
-    underlying_layers = safe_evaluate(
+    layer_metadata = parse_layer_metadata(
         top_level=top_level,
-        file_path=top_level / form.form_data.path,
+        file_path=form.form_data.path,
         extensions=extensions,
     )
 
-    provider_adapter = TypeAdapter(type(underlying_layers[0].provider))
-
-    layer_metadata = {
-        x.layer_id: {
-            "provider": provider_adapter.dump_python(x.provider, mode="json"),
-            "bounding_left": x.bounding_left,
-            "bounding_right": x.bounding_right,
-            "bounding_top": x.bounding_top,
-            "bounding_bottom": x.bounding_bottom,
-            "number_of_levels": x.number_of_levels,
-            "tile_size": x.tile_size,
-        }
-        for x in underlying_layers
-    }
-
     try:
+        for x in form.form_data.layers:
+            layer_metadata[x.layer_id].update(
+                quantity=x.quantity,
+                units=x.units,
+                vmin=x.vmin,
+                vmax=x.vmax,
+                cmap=x.cmap,
+            )
+
         layers = [
             LayerORM(
                 layer_id=x.layer_id,
                 name=x.name,
                 description=x.description,
                 grant=form.form_data.required_grant,
-                quantity=x.quantity,
-                units=x.units,
-                vmin=x.vmin,
-                vmax=x.vmax,
-                cmap=x.cmap,
                 **layer_metadata[x.layer_id],
             )
             for x in form.form_data.layers
@@ -138,7 +126,7 @@ def parse_map_form_to_orm(
 
 
 def parse_existing_map_to_orm(
-    form: MapFormData,
+    form: ExistingMapFormData,
     session: Session,
     top_level: Path,
     extensions: tuple[str] = ("fits",),
@@ -166,39 +154,28 @@ def parse_existing_map_to_orm(
         )
 
     # Re-parse from filesystem to grab base data.
-    underlying_layers = safe_evaluate(
+    layer_metadata = parse_layer_metadata(
         top_level=top_level,
-        file_path=top_level / form.form_data.path,
+        file_path=form.form_data.path,
         extensions=extensions,
     )
 
-    provider_adapter = TypeAdapter(type(underlying_layers[0].provider))
-
-    layer_metadata = {
-        x.layer_id: {
-            "provider": provider_adapter.dump_python(x.provider, mode="json"),
-            "bounding_left": x.bounding_left,
-            "bounding_right": x.bounding_right,
-            "bounding_top": x.bounding_top,
-            "bounding_bottom": x.bounding_bottom,
-            "number_of_levels": x.number_of_levels,
-            "tile_size": x.tile_size,
-        }
-        for x in underlying_layers
-    }
-
     try:
+        for x in form.form_data.layers:
+            layer_metadata[x.layer_id].update(
+                quantity=x.quantity,
+                units=x.units,
+                vmin=x.vmin,
+                vmax=x.vmax,
+                cmap=x.cmap,
+            )
+
         layers = [
             LayerORM(
                 layer_id=x.layer_id,
                 name=x.name,
                 description=x.description,
                 grant=band.grant,
-                quantity=x.quantity,
-                units=x.units,
-                vmin=x.vmin,
-                vmax=x.vmax,
-                cmap=x.cmap,
                 **layer_metadata[x.layer_id],
             )
             for x in form.form_data.layers

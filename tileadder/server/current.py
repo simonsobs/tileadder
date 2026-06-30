@@ -3,6 +3,7 @@ Handling for currently loaded maps
 """
 
 from fastapi import APIRouter, Request, Response
+from starlette.authentication import requires
 
 from tileadder.service.existing import (
     MapEdit,
@@ -18,8 +19,6 @@ from tileadder.service.existing import (
     update_map,
     update_map_group,
 )
-
-from starlette.authentication import requires
 
 from .templating import LoggerDependency, TemplateDependency, templateify
 

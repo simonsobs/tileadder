@@ -7,6 +7,7 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
+from starlette.authentication import requires
 
 from tileadder.service.creation import (
     ExistingMapFormData,
@@ -22,8 +23,6 @@ from tileadder.service.filesystem import (
 )
 
 from .templating import LoggerDependency, TemplateDependency, templateify
-
-from starlette.authentication import requires
 
 router = APIRouter(prefix="/add")
 
