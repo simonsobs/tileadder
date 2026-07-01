@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+  <section>
+    <div class="surface-card rounded-2xl p-5">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p class="section-kicker">Register MapCat Source</p>
+          <p class="body-copy mt-3 text-sm leading-6">
+            Register a mapcat database and the tilemaker map group metadata needed to ingest it later.
+            This stores the registration only; it does not run an update which will run asynchronously
+            in the background.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="surface-card rounded-2xl p-5" id="mapcat-registration-form">
+      <div class="mt-1 grid gap-4 lg:grid-cols-2">
+        <div>
+          <label for="mapcat_group_name" class="field-label">Map group name</label>
+          <input type="text"
+                 id="mapcat_group_name"
+                 class="field-input">
+        </div>
+        <div>
+          <label for="mapcat_group_description" class="field-label">Map group description</label>
+          <input type="text"
+                 id="mapcat_group_description"
+                 class="field-input">
+        </div>
+        <div>
+          <label for="mapcat_path" class="field-label">Mapcat path</label>
+          <input type="text"
+                 id="mapcat_path"
+                 class="field-input">
+        </div>
+        <div>
+          <label for="mapcat_data_root" class="field-label">Mapcat data root</label>
+          <input type="text"
+                 id="mapcat_data_root"
+                 class="field-input"
+                 value="{{ request.app.map_directory.parent }}">
+        </div>
+        <div>
+          <label for="mapcat_update_cadence_hours" class="field-label">Update cadence hours</label>
+          <input type="number"
+                 min="1"
+                 id="mapcat_update_cadence_hours"
+                 class="field-input"
+                 value="24">
+        </div>
+        <div>
+          <label for="mapcat_grant" class="field-label">Required grant</label>
+          <input type="text"
+                 id="mapcat_grant"
+                 class="field-input"
+                 value="{{ default_required_grant }}">
+        </div>
+        <div>
+          <label for="mapcat_database_type" class="field-label">Mapcat database type</label>
+          <input type="text"
+                 id="mapcat_database_type"
+                 class="field-input"
+                 value="sqlite"
+                 disabled >
+        </div>
+        <div>
+          <label for="mapcat_map_type" class="field-label">Map type</label>
+          <input type="text"
+                 id="mapcat_map_type"
+                 class="field-input"
+                 value="depth_one_maps"
+                 disabled >
+        </div>
+        <div class="lg:col-span-2">
+          <label for="mapcat_query" class="field-label">Query</label>
+          <textarea id="mapcat_query"
+                    rows="4"
+                    class="field-input"></textarea>
+        </div>
+      </div>
+      <button class="btn btn-blue mt-5"
+              type="button"
+              hx-post="{{ base_url }}/current/mapcat/register"
+              hx-ext="json-enc"
+              hx-vals='js:{"map_group_name": mapcat_group_name.value, "map_group_description": mapcat_group_description.value, "grant": mapcat_grant.value, "mapcat_path": mapcat_path.value, "mapcat_database_type": mapcat_database_type.value, "mapcat_data_root": mapcat_data_root.value, "query": mapcat_query.value, "map_type": mapcat_map_type.value, "update_cadence_hours": Number(mapcat_update_cadence_hours.value)}'>Create registration</button>
+    </div>
+  </section>
+{% endblock %}

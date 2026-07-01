@@ -8,6 +8,8 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from soauth.toolkit.fastapi import global_setup, mock_global_setup
 
+from tileadder.service.mapcat import MapCatRegistration, Base
+
 from tileadder.settings import Settings
 
 from .add import router as add_router
@@ -31,6 +33,9 @@ async def lifespan(app: FastAPI):
     app.app_id = str(settings.app_id)
     app.engine = EngineManager(database_url=settings.database_url)
     app.map_directory = settings.map_directory
+
+    Base.metadata.create_all(app.engine.engine)
+
     yield
 
 

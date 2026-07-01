@@ -19,6 +19,10 @@ from tileadder.service.existing import (
     update_map,
     update_map_group,
 )
+from tileadder.service.mapcat import (
+    MapCatRegistrationFormData,
+    create_mapcat_registration,
+)
 
 from .templating import LoggerDependency, TemplateDependency, templateify
 
@@ -33,6 +37,38 @@ def groups(request: Request, log: LoggerDependency, templates: TemplateDependenc
         map_groups = read_map_groups(session=s)
 
     return {"map_groups": map_groups}
+
+
+@router.get("/mapcat")
+@requires("maps:edit")
+@templateify(template_name="current_mapcat.html", log_name="current.mapcat.index")
+def mapcat_registration_page(
+    request: Request, log: LoggerDependency, templates: TemplateDependency
+):
+    return {}
+
+
+@router.post("/mapcat/register")
+@requires("maps:edit")
+def create_mapcat_registration_endpoint(
+    content: MapCatRegistrationFormData,
+    request: Request,
+) -> Response:
+    added_by = (
+        getattr(request.user, "display_name", None)
+        or getattr(request.user, "username", None)
+        or getattr(request.user, "email", None)
+        or "unknown"
+    )
+
+    with request.app.engine.session as s:
+        create_mapcat_registration(
+            form=content,
+            session=s,
+            added_by=added_by,
+        )
+
+    return Response(status_code=201, headers={"HX-Refresh": "true"})
 
 
 @router.delete("/groups/{map_group_id}")
