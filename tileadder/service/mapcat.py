@@ -19,6 +19,7 @@ from sqlalchemy import (
     Integer,
     String,
     select,
+    text,
 )
 from sqlalchemy.orm import Session, relationship
 from tilemaker.metadata.generation import filename_to_id
@@ -41,6 +42,7 @@ MAP_ATTRIBUTES_TO_USE = [
 
 def parse_depth_one_map(
     depth_one_map: DepthOneMapTable,
+    depth_one_parent: str | Path,
     map_group_id: int,
     prefix: str,
     grant: str,
@@ -71,8 +73,8 @@ def parse_depth_one_map(
         else None
     )
     map_end_time = (
-        datetime.fromtimestamp(depth_one_map.end_time, tz=timezone.utc)
-        if depth_one_map.end_time is not None
+        datetime.fromtimestamp(depth_one_map.stop_time, tz=timezone.utc)
+        if depth_one_map.stop_time is not None
         else None
     )
 
@@ -134,7 +136,11 @@ def parse_depth_one_map(
     band_existing_layers = set(x.layer_id for x in band_orm.layers)
 
     for _, attribute_name, attribute_description in MAP_ATTRIBUTES_TO_USE:
-        attribute_path = getattr(depth_one_map, attribute_name)
+        attribute_path = getattr(depth_one_map, attribute_name, None)
+
+        if attribute_path is None:
+            continue
+
         layer_id = f"{band_orm.band_id}-{filename_to_id(attribute_path)}-{filename_to_id(attribute_description)}"
 
         if layer_id in band_existing_layers:
@@ -142,12 +148,11 @@ def parse_depth_one_map(
 
         if attribute_path is not None:
             layers = parse_layer_metadata(
-                top_level=Path(depth_one_map.depth_one_parent),
+                top_level=Path(depth_one_parent),
                 file_path=Path(attribute_path),
                 extensions=("fits",),
             )
-            for layer in layers:
-                layer_id = (layer_id,)
+            for layer in layers.values():
                 layer_orm = LayerORM(
                     layer_id=layer_id,
                     name=attribute_description,
@@ -287,7 +292,7 @@ class MapCatRegistration(Base):
         a session from the tilemaker database.
         """
 
-        formulated_query = f"SELECT * FROM {self.map_type} WHERE {self.query}"
+        formulated_query = f"SELECT * FROM {self.map_type} WHERE {self.query};"
         expected_return_type = {
             "depth_one_maps": DepthOneMapTable,
             # TODO: Support non-depth-one maps.
@@ -299,22 +304,19 @@ class MapCatRegistration(Base):
         if self.map_type not in expected_return_type:
             raise ValueError(f"Unknown map type: {self.map_type}")
 
-        with self.mapcat_settings.get_session() as mapcat_session:
-            result = (
-                mapcat_session.execute(
-                    select(expected_return_type[self.map_type]).from_statement(
-                        formulated_query
-                    )
-                )
-                .scalars()
-                .all()
+        with self.mapcat_settings.session() as mapcat_session:
+            print(formulated_query)
+            query = select(expected_return_type[self.map_type]).from_statement(
+                text(formulated_query)
             )
+            result = mapcat_session.scalars(query)
 
             existing_maps = {map.map_id: map for map in self.map_group.maps}
 
             for map in result:
                 parse_depth_one_map(
                     depth_one_map=map,
+                    depth_one_parent=self.mapcat_settings.depth_one_parent,
                     map_group_id=self.map_group_id,
                     prefix=self.map_group.name,
                     grant=self.map_group.grant,

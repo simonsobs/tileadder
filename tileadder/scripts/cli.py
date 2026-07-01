@@ -17,6 +17,15 @@ def run_server(**kwargs):
     uvicorn.run("tileadder.server.app:app", host="0.0.0.0", use_colors=True)
 
 
+def run_background(**kwargs):
+    for k, v in kwargs.items():
+        os.environ[k] = v
+
+    from tileadder.background import background
+
+    background()
+
+
 def main():
     try:
         run = sys.argv[1] == "run"
@@ -32,13 +41,19 @@ def main():
             "TILEADDER_APP_BASE_URL": "http://localhost:8000",
         }
 
-        background_process = Process(target=run_server, kwargs=environment)
+        server_process = Process(target=run_server, kwargs=environment)
+        background_process = Process(target=run_background, kwargs=environment)
+
+        server_process.start()
         background_process.start()
 
         while True:
             time.sleep(1)
     if run and prod:
-        background_process = Process(target=run_server)
+        server_process = Process(target=run_server)
+        background_process = Process(target=run_background)
+
+        server_process.start()
         background_process.start()
 
         while True:

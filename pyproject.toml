@@ -19,7 +19,8 @@ dependencies = [
 	"ruff",
 	"ty",
 	"djlint",
-	"mapcat"
+	"mapcat",
+	"schedule"
 ]
 
 [project.scripts]
